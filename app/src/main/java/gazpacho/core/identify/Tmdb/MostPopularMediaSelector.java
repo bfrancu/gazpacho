@@ -2,6 +2,7 @@ package gazpacho.core.identify.Tmdb;
 
 import gazpacho.core.identify.MediaItemQueryTokens;
 import gazpacho.core.model.MediaItem;
+import gazpacho.core.model.MediaType;
 import gazpacho.core.util.CollectionUtils;
 import gazpacho.core.util.KeyExtractor;
 import gazpacho.core.util.StringUtils;
@@ -19,10 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -67,38 +65,55 @@ public class MostPopularMediaSelector implements TmdbMediaSelector {
     }
 
     @Override
-    public MediaItem selectClosestMatch(@NonNull MediaItem matchedMovie,
-                                        @NonNull MediaItem matchedShow,
+    public MediaItem selectClosestMatch(@NonNull MediaItem firstMatch,
+                                        @NonNull MediaItem secondMatch,
                                         @NonNull MediaItemQueryTokens queryTokens) {
-        if (null != queryTokens.season()) {
-            return matchedShow;
+        var optTvShowMatch = checkForTvShowInQueryTokens(firstMatch, secondMatch, queryTokens);
+        if (optTvShowMatch.isPresent()) {
+            return optTvShowMatch.get();
         }
 
-        if (fullMatch(matchedMovie, queryTokens)) {
-            return matchedMovie;
-        } else if (fullMatch(matchedShow, queryTokens)) {
-           return matchedShow;
+        if (fullMatch(firstMatch, queryTokens)) {
+            return firstMatch;
+        } else if (fullMatch(secondMatch, queryTokens)) {
+           return secondMatch;
         }
 
-        double movieTitleSimilarity = StringUtils.similarity(matchedMovie.title(), queryTokens.name());
-        double showTitleSimilarity = StringUtils.similarity(matchedShow.title(), queryTokens.name());
+        double movieTitleSimilarity = StringUtils.similarity(firstMatch.title(), queryTokens.name());
+        double showTitleSimilarity = StringUtils.similarity(secondMatch.title(), queryTokens.name());
 
         if (movieTitleSimilarity < MIN_THRESHOLD_TITLE_SIMILARITY &&
                 showTitleSimilarity >= MIN_THRESHOLD_TITLE_SIMILARITY) {
-            return matchedShow;
+            return secondMatch;
         } else if (showTitleSimilarity < MIN_THRESHOLD_TITLE_SIMILARITY &&
                 movieTitleSimilarity >= MIN_THRESHOLD_TITLE_SIMILARITY) {
-            return matchedMovie;
+            return firstMatch;
         }
 
-        if (matchedMovie.popularity() > matchedShow.popularity()) {
-            return matchedMovie;
+        if (firstMatch.popularity() > secondMatch.popularity()) {
+            return firstMatch;
         }
-        return matchedShow;
+        return secondMatch;
+    }
+
+    private Optional<MediaItem> checkForTvShowInQueryTokens(MediaItem firstMatch,
+                                                            MediaItem secondMatch,
+                                                            MediaItemQueryTokens queryTokens) {
+        if (null != queryTokens.season()) {
+            if (firstMatch.isMovie() && !secondMatch.isMovie()) {
+                return Optional.of(secondMatch);
+            }
+
+            if (secondMatch.isMovie() && !firstMatch.isMovie()) {
+                return Optional.of(firstMatch);
+            }
+        }
+        return Optional.empty();
     }
 
     private boolean fullMatch(MediaItem mediaItem, MediaItemQueryTokens queryTokens) {
-        boolean titleMatch = mediaItem.title().equals(queryTokens.name());
+        boolean titleMatch = mediaItem.title().toLowerCase(Locale.ROOT)
+                .equals(queryTokens.name().toLowerCase(Locale.ROOT));
         return titleMatch && yearMatch(mediaItem, queryTokens);
     }
 

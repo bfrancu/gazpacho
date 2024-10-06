@@ -34,14 +34,11 @@ public class App {
     public static void main(String[] args) {
 
         BasicConfigurator.configure();
-        String releaseDate = "2001-09-11";
-        /*
         TmdbApi tmdbApi = new TmdbApi(API_READ_ACCESS_TOKEN_KEY);
         printMostPopularMovie(tmdbApi, "lord of the rings", 2001);
         printMostPopularShow(tmdbApi, "breaking bad", null);
         printMostPopularShow(tmdbApi, "game of thrones", null);
         printMostPopularShow(tmdbApi, "house of the dragon", null);
-         */
     }
 
     private static void testStringDistance() {

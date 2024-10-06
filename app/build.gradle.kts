@@ -21,7 +21,10 @@ dependencies {
     //testImplementation("junit:junit:4.13.2")
 
     testImplementation(libs.junit)
-    testImplementation(platform("org.junit:junit-bom:5.11.0"))
+    testImplementation(libs.junitJupiterEngine)
+    testImplementation(libs.mockitoCore)
+//    testImplementation(platform("org.junit:junit-bom:5.11.0"))
+//    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 
     //testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
@@ -35,7 +38,7 @@ dependencies {
     implementation(libs.apacheCommonsLang)
     implementation(libs.apacheCommonsText)
     implementation(libs.apacheCommonsValidator)
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+
     // This dependency is used by the application.
 }
 

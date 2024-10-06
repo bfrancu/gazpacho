@@ -22,13 +22,17 @@ public record MediaItem(
         @NonNull String title,
         @NonNull String description,
         @NonNull String language,
-        @NonNull String originCountry,
         @NonNull String firstAirDate,
-        MediaType mediaType,
-        Double popularity,
+        String originCountry,
+        @NonNull MediaType mediaType,
+        @NonNull Double popularity,
         Integer season,
         Integer episode)
 {
+
+    public boolean isMovie() {
+        return MediaType.MOVIE == mediaType;
+    }
     /**
      *
      * @param show

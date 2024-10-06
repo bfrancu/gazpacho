@@ -4,8 +4,6 @@ import gazpacho.core.identify.MediaItemQueryTokens;
 import gazpacho.core.model.MediaItem;
 import info.movito.themoviedbapi.model.core.Movie;
 import info.movito.themoviedbapi.model.core.TvSeries;
-import info.movito.themoviedbapi.model.movies.MovieDb;
-import info.movito.themoviedbapi.model.tv.series.TvSeriesDb;
 import lombok.NonNull;
 
 import java.util.List;
