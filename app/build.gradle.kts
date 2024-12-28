@@ -34,10 +34,12 @@ dependencies {
     implementation(libs.guava)
     implementation(libs.lombok)
     implementation(libs.json)
+    implementation(libs.jsoup)
     implementation(libs.jacksonDatabind)
     implementation(libs.apacheCommonsLang)
     implementation(libs.apacheCommonsText)
     implementation(libs.apacheCommonsValidator)
+    implementation(libs.apacheCommonsCollections)
 
     // This dependency is used by the application.
 }

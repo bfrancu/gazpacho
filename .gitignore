@@ -4,4 +4,7 @@
 build
 
 # Ignore intellij files
-.idea/workspace.xml
+.idea/*
+
+# Ignore build output
+app/out/*

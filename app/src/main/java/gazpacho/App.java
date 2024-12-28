@@ -3,8 +3,18 @@
  */
 package gazpacho;
 
+import gazpacho.core.download.filelist.DataSourceRetriever;
+import gazpacho.core.download.filelist.download.DataSourceDownloader;
+import gazpacho.core.download.filelist.match.*;
+import gazpacho.core.download.filelist.model.SearchResultEntry;
+import gazpacho.core.download.filelist.navigate.MediaSearcher;
+import gazpacho.core.download.filelist.navigate.QueryUrlResolver;
+import gazpacho.core.download.filelist.navigate.SessionHandler;
+import gazpacho.core.model.MediaItem;
+import gazpacho.core.model.MediaType;
 import gazpacho.core.util.CollectionUtils;
 import gazpacho.core.util.KeyExtractor;
+import gazpacho.core.util.OrderedHierarchyComparator;
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbSearch;
 import info.movito.themoviedbapi.TmdbTrending;
@@ -20,6 +30,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
 import java.util.*;
 
 @Slf4j
@@ -32,13 +43,55 @@ public class App {
     }
 
     public static void main(String[] args) {
-
         BasicConfigurator.configure();
+        testMediaSourceDownload();
+    }
+
+    private static void testMediaSourceDownload() {
+        DataSourceDownloader downloader = new DataSourceDownloader(Path.of("/home/bfrancu/Downloads"), LOGGER);
+        SessionHandler sessionHandler = new SessionHandler("flashback", "******", 300, 40);
+        ItemQueryConverter itemQueryConverter = new ItemQueryConverter();
+        QueryUrlResolver queryUrlResolver = new QueryUrlResolver(itemQueryConverter);
+        MediaSearcher mediaSearcher = new MediaSearcher(queryUrlResolver, LOGGER);
+        Comparator<SearchResultEntry> resultEntryComparator = new OrderedHierarchyComparator<>(
+                List.of(new VideoQualityResultsComparator(),
+                        new DownloadSizeResultsComparator(),
+                        new SeedersCountResultsComparator())
+        );
+
+        SearchResultSelectionStrategy searchResultSelectionStrategy = new MatchingIdentifierSelectionStrategy(
+                itemQueryConverter,
+                resultEntryComparator,
+                LOGGER
+        );
+
+        DataSourceRetriever dataSourceRetriever = new DataSourceRetriever(sessionHandler,
+                mediaSearcher,
+                searchResultSelectionStrategy,
+                downloader,
+                LOGGER);
+
+        MediaItem mediaItem = MediaItem.builder()
+                .title("The Lord of the Rings The War of the Rohirrim")
+                .description("")
+                .firstAirDate("2024")
+                .mediaType(MediaType.MOVIE)
+                .language("EN")
+                .popularity(100.0)
+                .build();
+
+        Path downloadPath = dataSourceRetriever.retrieveDataSource(mediaItem);
+
+        System.out.println("Download path: " + downloadPath);
+    }
+
+    private static void testTmdbApi() {
         TmdbApi tmdbApi = new TmdbApi(API_READ_ACCESS_TOKEN_KEY);
         printMostPopularMovie(tmdbApi, "lord of the rings", 2001);
         printMostPopularShow(tmdbApi, "breaking bad", null);
         printMostPopularShow(tmdbApi, "game of thrones", null);
         printMostPopularShow(tmdbApi, "house of the dragon", null);
+
     }
 
     private static void testStringDistance() {

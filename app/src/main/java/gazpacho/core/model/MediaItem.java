@@ -33,6 +33,15 @@ public record MediaItem(
     public boolean isMovie() {
         return MediaType.MOVIE == mediaType;
     }
+
+    public boolean isSeason() {
+        return MediaType.TV_SEASON == mediaType;
+    }
+
+    public boolean isEpisode() {
+        return MediaType.TV_EPISODE == mediaType;
+    }
+
     /**
      *
      * @param show
