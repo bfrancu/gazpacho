@@ -27,6 +27,11 @@ public class DelimiterQueryTokensParserTest {
     }
 
     @Test
+    public void match_matchesTitleWithSpecialCharacter() {
+        validateMatch("Malcolm & Marie", "Malcolm & Marie", null, null, null);
+    }
+
+    @Test
     public void match_matchesTitleYearSeason() {
         validateMatch("Severance|2022|s01", "Severance", 2022, 1, null);
     }

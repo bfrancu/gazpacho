@@ -5,6 +5,8 @@ import info.movito.themoviedbapi.model.tv.series.TvSeriesDb;
 import lombok.Builder;
 import lombok.NonNull;
 
+import java.time.LocalDate;
+
 /**
  *
  * @param title
@@ -22,7 +24,7 @@ public record MediaItem(
         @NonNull String title,
         @NonNull String description,
         @NonNull String language,
-        @NonNull String firstAirDate,
+        @NonNull LocalDate firstAirDate,
         String originCountry,
         @NonNull MediaType mediaType,
         @NonNull Double popularity,
@@ -54,7 +56,7 @@ public record MediaItem(
                 .title(show.getName())
                 .description(show.getOverview())
                 .language(show.getOriginalLanguage())
-                .firstAirDate(show.getFirstAirDate())
+                .firstAirDate(LocalDate.parse(show.getFirstAirDate()))
                 .mediaType(null != episode ? MediaType.TV_EPISODE : MediaType.TV_SEASON)
                 .popularity(show.getPopularity())
                 .season(season)
@@ -74,7 +76,7 @@ public record MediaItem(
     public static MediaItem fromMovie(MovieDb movie) {
         var builder = MediaItem.builder()
                 .title(movie.getTitle())
-                .firstAirDate(movie.getReleaseDate())
+                .firstAirDate(LocalDate.parse(movie.getReleaseDate()))
                 .popularity(movie.getPopularity())
                 .mediaType(MediaType.MOVIE)
                 .description(movie.getOverview())

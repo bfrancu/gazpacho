@@ -38,7 +38,7 @@ public class DelimiterQueryTokensParser implements QueryTokensParser {
      */
     private static final char TOKEN_SEP = '|';
     private static final String SEP_REGEX_GROUP = String.format("((\\s)*\\%s(\\s)*)?", TOKEN_SEP);
-    private static final String NAME_REGEX_GROUP = "(^[a-zA-Z0-9\\s,!]+)";
+    private static final String NAME_REGEX_GROUP = "(^[a-zA-Z0-9\\s,!&]+)";
     private static final String YEAR_REGEX_GROUP = "((19\\d\\d)|(20\\d\\d))?";
     private static final String SEASON_REGEX_GROUP = "([sS](eason)?(\\s)*((\\d\\d)|(0?\\d)))?";
     private static final String EPISODE_REGEX_GROUP = "([eE](pisode)?(\\s)*((\\d){1,3}))?";

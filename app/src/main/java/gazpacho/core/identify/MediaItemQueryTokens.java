@@ -9,9 +9,6 @@ public record MediaItemQueryTokens(
         Integer releaseYear,
         Integer season,
         Integer episode) {
-
-    public static class MediaItemQueryTokensBuilder {
-    }
 }
 
 

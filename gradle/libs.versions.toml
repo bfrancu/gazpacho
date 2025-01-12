@@ -4,15 +4,19 @@ lombokVer = "1.18.34"
 jsonVer = "20231013"
 jsoupVer = "1.18.3"
 jacksonDatabindVer = "2.17.0"
+jacksonGuavaVer = "2.18.2"
 theMovieDbApiVer = "2.1.2"
 slfLog4jVer = "2.0.16"
 apacheCommonsLangVer = "3.17.0"
 apacheCommonsTextVer = "1.12.0"
 apacheCommonsValidatorVer = "1.9.0"
 apacheCommonsCollectionsVer = "4.5.0-M3"
+apacheHttpClientVer = "5.4.1"
+apacheHttpCoreVer = "5.3.1"
 junitVer = "5.14.0"
 mockitoCoreVer = "5.14.0"
 junitJupiterEngineVer = "5.11.1"
+plexApiVer = "0.11.1"
 
 [libraries]
 slf4jlog4j12 = { module = "org.slf4j:slf4j-log4j12", version.ref = "slfLog4jVer" }
@@ -22,10 +26,14 @@ guava = { module = "com.google.guava:guava", version.ref = "guavaVer" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombokVer" }
 json = { module = "org.json:json", version.ref = "jsonVer" }
 jacksonDatabind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jacksonDatabindVer" }
+jacksonGuava = { module = "com.fasterxml.jackson.datatype:jackson-datatype-guava", version.ref = "jacksonGuavaVer" }
 apacheCommonsLang = { module = "org.apache.commons:commons-lang3", version.ref = "apacheCommonsLangVer" }
 apacheCommonsText = { module = "org.apache.commons:commons-text", version.ref = "apacheCommonsTextVer" }
 apacheCommonsValidator = { module = "commons-validator:commons-validator", version.ref = "apacheCommonsValidatorVer" }
 apacheCommonsCollections = { module = "org.apache.commons:commons-collections4", version.ref = "apacheCommonsCollectionsVer" }
+apacheHttpClient = { module = "org.apache.httpcomponents.client5:httpclient5", version.ref = "apacheHttpClientVer" }
+apacheHttpCore = { module = "org.apache.httpcomponents.core5:httpcore5", version.ref = "apacheHttpCoreVer" }
 junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "junitVer" }
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockitoCoreVer" }
 junitJupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiterEngineVer" }
+plexApi = { module = "dev.plexapi:plexapi", version.ref = "plexApiVer" }

@@ -2,7 +2,6 @@ package gazpacho.core.identify.Tmdb;
 
 import gazpacho.core.identify.MediaItemQueryTokens;
 import gazpacho.core.model.MediaItem;
-import gazpacho.core.model.MediaType;
 import gazpacho.core.util.CollectionUtils;
 import gazpacho.core.util.KeyExtractor;
 import gazpacho.core.util.StringUtils;
@@ -33,6 +32,7 @@ public class MostPopularMediaSelector implements TmdbMediaSelector {
     @Override
     public Optional<MediaItem> selectMovie(@NonNull List<Movie> movieList,
                                          @NonNull MediaItemQueryTokens ignored) {
+        logger.info("Select movie {}", movieList);
         return getMostPopularMovie(movieList)
                 .map(movie -> {
                     try {
@@ -47,6 +47,7 @@ public class MostPopularMediaSelector implements TmdbMediaSelector {
     @Override
     public Optional<MediaItem> selectTvSeries(@NonNull List<TvSeries> seriesList,
                                                @NonNull MediaItemQueryTokens queryTokens) {
+        logger.info("Select show {}, {}", seriesList, queryTokens);
         return getMostPopularShow(seriesList)
                 .map(show -> {
                     try {
@@ -68,6 +69,7 @@ public class MostPopularMediaSelector implements TmdbMediaSelector {
     public MediaItem selectClosestMatch(@NonNull MediaItem firstMatch,
                                         @NonNull MediaItem secondMatch,
                                         @NonNull MediaItemQueryTokens queryTokens) {
+        logger.info("Select closest match first {} second {}", firstMatch, secondMatch);
         var optTvShowMatch = checkForTvShowInQueryTokens(firstMatch, secondMatch, queryTokens);
         if (optTvShowMatch.isPresent()) {
             return optTvShowMatch.get();
@@ -120,8 +122,7 @@ public class MostPopularMediaSelector implements TmdbMediaSelector {
     private boolean yearMatch(MediaItem mediaItem, MediaItemQueryTokens queryTokens) {
         if (null != queryTokens.releaseYear()) {
             try {
-                TmdbDate date = new TmdbDate(mediaItem.firstAirDate());
-                return date.year() == queryTokens.releaseYear();
+                return mediaItem.firstAirDate().getYear() == queryTokens.releaseYear();
             } catch (IllegalArgumentException e) {
                 logger.error("Invalid date format {}", mediaItem.firstAirDate(), e);
                 return false;

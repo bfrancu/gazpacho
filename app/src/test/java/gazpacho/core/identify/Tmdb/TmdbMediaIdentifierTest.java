@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +42,7 @@ public class TmdbMediaIdentifierTest {
             .title(MOVIE_NAME)
             .description("")
             .language("EN")
-            .firstAirDate("")
+            .firstAirDate(LocalDate.now())
             .mediaType(MediaType.MOVIE)
             .popularity(100.0)
             .build();
@@ -50,7 +51,7 @@ public class TmdbMediaIdentifierTest {
             .title(SHOW_NAME)
             .description("")
             .language("EN")
-            .firstAirDate("")
+            .firstAirDate(LocalDate.now())
             .mediaType(MediaType.TV_SEASON)
             .popularity(100.0)
             .season(2)

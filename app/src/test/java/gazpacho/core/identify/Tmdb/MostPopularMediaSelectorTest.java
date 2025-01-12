@@ -23,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.slf4j.Logger;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -96,7 +97,7 @@ public class MostPopularMediaSelectorTest {
                 .title("No country for old men")
                 .description("")
                 .language(ORIGINAL_LANG)
-                .firstAirDate("")
+                .firstAirDate(LocalDate.now())
                 .mediaType(MediaType.MOVIE)
                 .popularity(10.0)
                 .build();
@@ -105,7 +106,7 @@ public class MostPopularMediaSelectorTest {
                 .title("No country for young men")
                 .description("")
                 .language(ORIGINAL_LANG)
-                .firstAirDate("")
+                .firstAirDate(LocalDate.now())
                 .mediaType(MediaType.TV_SEASON)
                 .popularity(11.0)
                 .season(5)
@@ -123,7 +124,7 @@ public class MostPopularMediaSelectorTest {
                 .title("Breaking bad")
                 .description("")
                 .language(ORIGINAL_LANG)
-                .firstAirDate("")
+                .firstAirDate(LocalDate.now())
                 .mediaType(MediaType.TV_SEASON)
                 .popularity(10.0)
                 .season(5)
@@ -133,7 +134,7 @@ public class MostPopularMediaSelectorTest {
                 .title("Breaking bread")
                 .description("")
                 .language(ORIGINAL_LANG)
-                .firstAirDate("")
+                .firstAirDate(LocalDate.now())
                 .mediaType(MediaType.MOVIE)
                 .popularity(100.0)
                 .build();
@@ -152,7 +153,7 @@ public class MostPopularMediaSelectorTest {
                 .title("Sopranos")
                 .description("")
                 .language(ORIGINAL_LANG)
-                .firstAirDate("1999-05-01")
+                .firstAirDate(LocalDate.parse("1999-05-01"))
                 .mediaType(MediaType.TV_SEASON)
                 .popularity(10.0)
                 .season(5)
@@ -162,7 +163,7 @@ public class MostPopularMediaSelectorTest {
                 .title("Lord of the rings, The two towers")
                 .description("")
                 .language(ORIGINAL_LANG)
-                .firstAirDate("")
+                .firstAirDate(LocalDate.now())
                 .mediaType(MediaType.MOVIE)
                 .popularity(100.0)
                 .build();
@@ -181,7 +182,7 @@ public class MostPopularMediaSelectorTest {
                 .title("Grinch stole Christmas")
                 .description("")
                 .language(ORIGINAL_LANG)
-                .firstAirDate("1999-05-01")
+                .firstAirDate(LocalDate.parse("1999-05-01"))
                 .mediaType(MediaType.MOVIE)
                 .popularity(100.0)
                 .build();
@@ -190,7 +191,7 @@ public class MostPopularMediaSelectorTest {
                 .title("Grinch stole my heart")
                 .description("")
                 .language(ORIGINAL_LANG)
-                .firstAirDate("")
+                .firstAirDate(LocalDate.now())
                 .mediaType(MediaType.MOVIE)
                 .popularity(500.0)
                 .build();

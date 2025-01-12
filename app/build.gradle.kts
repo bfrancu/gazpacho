@@ -36,10 +36,14 @@ dependencies {
     implementation(libs.json)
     implementation(libs.jsoup)
     implementation(libs.jacksonDatabind)
+    implementation(libs.jacksonGuava)
     implementation(libs.apacheCommonsLang)
     implementation(libs.apacheCommonsText)
     implementation(libs.apacheCommonsValidator)
     implementation(libs.apacheCommonsCollections)
+    implementation(libs.apacheHttpClient)
+    implementation(libs.apacheHttpCore)
+    implementation(libs.plexApi)
 
     // This dependency is used by the application.
 }

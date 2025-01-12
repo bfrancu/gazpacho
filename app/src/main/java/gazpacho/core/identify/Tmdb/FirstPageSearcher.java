@@ -22,6 +22,7 @@ public class FirstPageSearcher implements TmdbSearcher {
 
     @Override
     public List<Movie> searchMovies(@NonNull MediaItemQueryTokens queryTokens) {
+        logger.info("Searching movies {}", queryTokens);
         return search(getSearchApi(), queryTokens, (searchApi, tokens) ->
                 searchApi.searchMovie(tokens.name(),
                         false,
@@ -35,6 +36,7 @@ public class FirstPageSearcher implements TmdbSearcher {
 
     @Override
     public List<TvSeries> searchTvSeries(@NonNull MediaItemQueryTokens queryTokens) {
+        logger.info("Searching shows {}", queryTokens);
         return search(getSearchApi(), queryTokens, (searchApi, tokens) ->
                 searchApi.searchTv(tokens.name(),
                         tokens.releaseYear(),
