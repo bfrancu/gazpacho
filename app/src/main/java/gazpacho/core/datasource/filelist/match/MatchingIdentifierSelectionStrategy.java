@@ -2,7 +2,7 @@ package gazpacho.core.datasource.filelist.match;
 
 import gazpacho.core.datasource.filelist.model.SearchResultEntry;
 import gazpacho.core.model.MediaItem;
-import gazpacho.core.model.MediaType;
+import gazpacho.core.model.MediaReleaseType;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -56,7 +56,7 @@ public class MatchingIdentifierSelectionStrategy implements SearchResultSelectio
 
         if (matched.isEmpty() && mediaItem.isEpisode()) {
             MediaItem seasonMediaItem = mediaItem.toBuilder()
-                    .mediaType(MediaType.TV_SEASON)
+                    .mediaReleaseType(MediaReleaseType.TV_SEASON)
                     .build();
             return filterByExactMatch(resultEntries, seasonMediaItem);
         }
@@ -66,10 +66,10 @@ public class MatchingIdentifierSelectionStrategy implements SearchResultSelectio
 
     private boolean genreMatches(SearchResultEntry resultEntry, MediaItem mediaItem) {
         logger.info("Genre matches {} : {}", resultEntry, mediaItem);
-        return switch (mediaItem.mediaType()) {
-            case MediaType.MOVIE -> resultEntry.category().category().isMovie();
-            case MediaType.TV_EPISODE,
-                 MediaType.TV_SEASON -> resultEntry.category().category().isTv();
+        return switch (mediaItem.mediaReleaseType()) {
+            case MediaReleaseType.MOVIE -> resultEntry.category().category().isMovie();
+            case MediaReleaseType.TV_EPISODE,
+                 MediaReleaseType.TV_SEASON -> resultEntry.category().category().isTv();
             default -> false;
         };
     }

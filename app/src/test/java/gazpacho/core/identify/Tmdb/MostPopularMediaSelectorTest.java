@@ -2,7 +2,7 @@ package gazpacho.core.identify.Tmdb;
 
 import gazpacho.core.identify.MediaItemQueryTokens;
 import gazpacho.core.model.MediaItem;
-import gazpacho.core.model.MediaType;
+import gazpacho.core.model.MediaReleaseType;
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.TmdbTvSeasons;
@@ -98,7 +98,7 @@ public class MostPopularMediaSelectorTest {
                 .description("")
                 .language(ORIGINAL_LANG)
                 .firstAirDate(LocalDate.now())
-                .mediaType(MediaType.MOVIE)
+                .mediaReleaseType(MediaReleaseType.MOVIE)
                 .popularity(10.0)
                 .build();
 
@@ -107,7 +107,7 @@ public class MostPopularMediaSelectorTest {
                 .description("")
                 .language(ORIGINAL_LANG)
                 .firstAirDate(LocalDate.now())
-                .mediaType(MediaType.TV_SEASON)
+                .mediaReleaseType(MediaReleaseType.TV_SEASON)
                 .popularity(11.0)
                 .season(5)
                 .build();
@@ -125,7 +125,7 @@ public class MostPopularMediaSelectorTest {
                 .description("")
                 .language(ORIGINAL_LANG)
                 .firstAirDate(LocalDate.now())
-                .mediaType(MediaType.TV_SEASON)
+                .mediaReleaseType(MediaReleaseType.TV_SEASON)
                 .popularity(10.0)
                 .season(5)
                 .build();
@@ -135,7 +135,7 @@ public class MostPopularMediaSelectorTest {
                 .description("")
                 .language(ORIGINAL_LANG)
                 .firstAirDate(LocalDate.now())
-                .mediaType(MediaType.MOVIE)
+                .mediaReleaseType(MediaReleaseType.MOVIE)
                 .popularity(100.0)
                 .build();
 
@@ -154,7 +154,7 @@ public class MostPopularMediaSelectorTest {
                 .description("")
                 .language(ORIGINAL_LANG)
                 .firstAirDate(LocalDate.parse("1999-05-01"))
-                .mediaType(MediaType.TV_SEASON)
+                .mediaReleaseType(MediaReleaseType.TV_SEASON)
                 .popularity(10.0)
                 .season(5)
                 .build();
@@ -164,7 +164,7 @@ public class MostPopularMediaSelectorTest {
                 .description("")
                 .language(ORIGINAL_LANG)
                 .firstAirDate(LocalDate.now())
-                .mediaType(MediaType.MOVIE)
+                .mediaReleaseType(MediaReleaseType.MOVIE)
                 .popularity(100.0)
                 .build();
 
@@ -183,7 +183,7 @@ public class MostPopularMediaSelectorTest {
                 .description("")
                 .language(ORIGINAL_LANG)
                 .firstAirDate(LocalDate.parse("1999-05-01"))
-                .mediaType(MediaType.MOVIE)
+                .mediaReleaseType(MediaReleaseType.MOVIE)
                 .popularity(100.0)
                 .build();
 
@@ -192,7 +192,7 @@ public class MostPopularMediaSelectorTest {
                 .description("")
                 .language(ORIGINAL_LANG)
                 .firstAirDate(LocalDate.now())
-                .mediaType(MediaType.MOVIE)
+                .mediaReleaseType(MediaReleaseType.MOVIE)
                 .popularity(500.0)
                 .build();
 

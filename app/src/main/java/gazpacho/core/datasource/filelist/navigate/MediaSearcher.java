@@ -1,6 +1,7 @@
 package gazpacho.core.datasource.filelist.navigate;
 
 import gazpacho.core.datasource.filelist.model.*;
+import gazpacho.core.model.SizeUnit;
 import gazpacho.core.model.VideoQuality;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;

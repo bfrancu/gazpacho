@@ -1,6 +1,6 @@
 package gazpacho.core.stream.plex.model;
 
-import gazpacho.core.model.MediaType;
+import gazpacho.core.model.MediaReleaseType;
 import gazpacho.core.stream.plex.model.io.Metadata;
 import lombok.Builder;
 import lombok.NonNull;
@@ -13,7 +13,7 @@ public record Season(@NonNull String ratingKey,
                      Integer episodes) {
 
     public static Season fromMetadata(@NonNull Metadata metadata) {
-        if (!MediaType.TV_SEASON.equals(metadata.type())) {
+        if (!MediaReleaseType.TV_SEASON.equals(metadata.type())) {
             throw new IllegalArgumentException(
                     String.format("Invalid metadata media type %s", metadata.type()));
         }

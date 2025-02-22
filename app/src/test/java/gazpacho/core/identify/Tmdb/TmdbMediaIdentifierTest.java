@@ -3,7 +3,7 @@ package gazpacho.core.identify.Tmdb;
 import gazpacho.core.identify.MediaItemQueryTokens;
 import gazpacho.core.identify.QueryTokensParser;
 import gazpacho.core.model.MediaItem;
-import gazpacho.core.model.MediaType;
+import gazpacho.core.model.MediaReleaseType;
 import info.movito.themoviedbapi.model.core.Movie;
 import info.movito.themoviedbapi.model.core.TvSeries;
 import org.junit.jupiter.api.Test;
@@ -43,7 +43,7 @@ public class TmdbMediaIdentifierTest {
             .description("")
             .language("EN")
             .firstAirDate(LocalDate.now())
-            .mediaType(MediaType.MOVIE)
+            .mediaReleaseType(MediaReleaseType.MOVIE)
             .popularity(100.0)
             .build();
 
@@ -52,7 +52,7 @@ public class TmdbMediaIdentifierTest {
             .description("")
             .language("EN")
             .firstAirDate(LocalDate.now())
-            .mediaType(MediaType.TV_SEASON)
+            .mediaReleaseType(MediaReleaseType.TV_SEASON)
             .popularity(100.0)
             .season(2)
             .build();

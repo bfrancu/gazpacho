@@ -7,29 +7,29 @@ import lombok.NonNull;
 import java.util.Arrays;
 import java.util.function.Function;
 
-public enum MediaType {
+public enum MediaReleaseType {
     MOVIE("movie"),
     TV_SHOW("show"),
     TV_SEASON("season"),
     TV_EPISODE("episode"),
     UNKNOWN("unknown");
 
-    private static final ImmutableMap<String, MediaType> VALUES_MAP = Arrays.stream(MediaType.values())
+    private static final ImmutableMap<String, MediaReleaseType> VALUES_MAP = Arrays.stream(MediaReleaseType.values())
             .filter(value -> !UNKNOWN.equals(value))
-            .collect(ImmutableMap.toImmutableMap(MediaType::value, Function.identity()));
+            .collect(ImmutableMap.toImmutableMap(MediaReleaseType::value, Function.identity()));
 
     @JsonValue
     private final String value;
 
-    public static MediaType from(@NonNull String value) {
-        return VALUES_MAP.getOrDefault(value, MediaType.UNKNOWN);
+    public static MediaReleaseType from(@NonNull String value) {
+        return VALUES_MAP.getOrDefault(value, MediaReleaseType.UNKNOWN);
     }
 
     public String value() {
         return this.value;
     }
 
-    MediaType(@NonNull String value) {
+    MediaReleaseType(@NonNull String value) {
         this.value = value;
     }
 }

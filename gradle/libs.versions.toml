@@ -7,6 +7,8 @@ jacksonDatabindVer = "2.17.0"
 jacksonGuavaVer = "2.18.2"
 theMovieDbApiVer = "2.1.2"
 slfLog4jVer = "2.0.16"
+log4jApiVer = "2.24.3"
+log4jCoreVer = "2.24.3"
 apacheCommonsLangVer = "3.17.0"
 apacheCommonsTextVer = "1.12.0"
 apacheCommonsValidatorVer = "1.9.0"
@@ -17,9 +19,21 @@ junitVer = "5.14.0"
 mockitoCoreVer = "5.14.0"
 junitJupiterEngineVer = "5.11.1"
 plexApiVer = "0.11.1"
+pgJDBCVer = "42.7.5"
+glassfishJakartaVer = "6.0.1"
+agroalPoolVer = "2.5"
+hibernateValidatorVer = "8.0.2.Final"
+hibernateOrmVer = "7.0.0.Beta3"
+hibernateAgroalVer = "7.0.0.Beta3"
+hibernateProcessorVer = "7.0.0.Beta3"
+hibernateQueryValidatorVer = "2.0-SNAPSHOT"
+h2DatabaseVer = "2.3.232"
+
 
 [libraries]
-slf4jlog4j12 = { module = "org.slf4j:slf4j-log4j12", version.ref = "slfLog4jVer" }
+slf4jlog4j12 = { module = "org.slf4j:slf4j-reload4j", version.ref = "slfLog4jVer" }
+log4jApi = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4jApiVer" }
+log4jCore = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4jCoreVer" }
 theMovieDbApi = { module = "uk.co.conoregan:themoviedbapi", version.ref = "theMovieDbApiVer" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoupVer" }
 guava = { module = "com.google.guava:guava", version.ref = "guavaVer" }
@@ -37,3 +51,12 @@ junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "junitVer"
 mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockitoCoreVer" }
 junitJupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiterEngineVer" }
 plexApi = { module = "dev.plexapi:plexapi", version.ref = "plexApiVer" }
+pgJDBC = { module = "org.postgresql:postgresql", version.ref = "pgJDBCVer" }
+hibernateOrm = { module = "org.hibernate.orm:hibernate-core", version.ref = "hibernateOrmVer" }
+hibernateValidator = { module = "org.hibernate.validator:hibernate-validator", version.ref = "hibernateValidatorVer" }
+glassfishJakartaExpressionLanguage = { module = "jakarta.el:jakarta.el-api", version.ref = "glassfishJakartaVer" }
+hibernateAgroal = { module = "org.hibernate.orm:hibernate-agroal", version.ref = "hibernateAgroalVer" }
+agroalPool = { module = "io.agroal:agroal-pool", version.ref = "agroalPoolVer" }
+hibernateProcessor = { module = "org.hibernate.orm:hibernate-processor", version.ref = "hibernateProcessorVer" }
+hibernateQueryValidator = { module = "org.hibernate:query-validator", version.ref = "hibernateQueryValidatorVer" }
+h2Database = { module = "com.h2database:h2", version.ref = "h2DatabaseVer" }

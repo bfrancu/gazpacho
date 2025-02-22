@@ -14,7 +14,7 @@ import java.time.LocalDate;
  * @param language
  * @param originCountry
  * @param firstAirDate
- * @param mediaType
+ * @param mediaReleaseType
  * @param popularity
  * @param season
  * @param episode
@@ -26,22 +26,22 @@ public record MediaItem(
         @NonNull String language,
         @NonNull LocalDate firstAirDate,
         String originCountry,
-        @NonNull MediaType mediaType,
+        @NonNull MediaReleaseType mediaReleaseType,
         @NonNull Double popularity,
         Integer season,
         Integer episode)
 {
 
     public boolean isMovie() {
-        return MediaType.MOVIE == mediaType;
+        return MediaReleaseType.MOVIE == mediaReleaseType;
     }
 
     public boolean isSeason() {
-        return MediaType.TV_SEASON == mediaType;
+        return MediaReleaseType.TV_SEASON == mediaReleaseType;
     }
 
     public boolean isEpisode() {
-        return MediaType.TV_EPISODE == mediaType;
+        return MediaReleaseType.TV_EPISODE == mediaReleaseType;
     }
 
     /**
@@ -57,7 +57,7 @@ public record MediaItem(
                 .description(show.getOverview())
                 .language(show.getOriginalLanguage())
                 .firstAirDate(LocalDate.parse(show.getFirstAirDate()))
-                .mediaType(null != episode ? MediaType.TV_EPISODE : MediaType.TV_SEASON)
+                .mediaReleaseType(null != episode ? MediaReleaseType.TV_EPISODE : MediaReleaseType.TV_SEASON)
                 .popularity(show.getPopularity())
                 .season(season)
                 .episode(episode);
@@ -78,7 +78,7 @@ public record MediaItem(
                 .title(movie.getTitle())
                 .firstAirDate(LocalDate.parse(movie.getReleaseDate()))
                 .popularity(movie.getPopularity())
-                .mediaType(MediaType.MOVIE)
+                .mediaReleaseType(MediaReleaseType.MOVIE)
                 .description(movie.getOverview())
                 .language(movie.getOriginalLanguage());
 

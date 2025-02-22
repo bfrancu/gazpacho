@@ -8,3 +8,6 @@ build
 
 # Ignore build output
 app/out/*
+
+# Ignore generated files
+app/src/main/generated/*

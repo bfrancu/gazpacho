@@ -2,7 +2,7 @@ package gazpacho.core.stream.plex.model.io;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import gazpacho.core.model.MediaType;
+import gazpacho.core.model.MediaReleaseType;
 import lombok.Builder;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public record GetLibraryItemsResponse(@JsonProperty("MediaContainer")
                                  String thumb,
                                  String title1,
                                  String title2,
-                                 MediaType viewGroup,
+                                 MediaReleaseType viewGroup,
                                  Integer viewMode,
                                  Boolean mixedParents,
                                  Boolean nocache,

@@ -23,6 +23,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.junitJupiterEngine)
     testImplementation(libs.mockitoCore)
+    testImplementation(libs.h2Database)
 //    testImplementation(platform("org.junit:junit-bom:5.11.0"))
 //    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 
@@ -31,6 +32,8 @@ dependencies {
     // This dependency is used by the application.
     implementation(libs.theMovieDbApi)
     implementation(libs.slf4jlog4j12)
+    implementation(libs.log4jApi)
+    implementation(libs.log4jCore)
     implementation(libs.guava)
     implementation(libs.lombok)
     implementation(libs.json)
@@ -44,6 +47,17 @@ dependencies {
     implementation(libs.apacheHttpClient)
     implementation(libs.apacheHttpCore)
     implementation(libs.plexApi)
+    implementation(libs.pgJDBC)
+
+    implementation(libs.hibernateOrm)
+
+    //implementation(libs.hibernateValidator)
+    implementation(libs.glassfishJakartaExpressionLanguage)
+
+    implementation(libs.hibernateAgroal)
+    implementation(libs.agroalPool)
+
+    annotationProcessor(libs.hibernateProcessor)
 
     // This dependency is used by the application.
 }

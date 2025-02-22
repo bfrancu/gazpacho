@@ -7,7 +7,8 @@ import gazpacho.core.datasource.filelist.navigate.MediaSearcher;
 import gazpacho.core.datasource.filelist.navigate.SessionHandler;
 import gazpacho.core.exception.NonRetryableException;
 import gazpacho.core.model.MediaItem;
-import gazpacho.core.model.MediaType;
+import gazpacho.core.model.MediaReleaseType;
+import gazpacho.core.model.SizeUnit;
 import gazpacho.core.model.VideoQuality;
 import org.jsoup.Connection;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +48,7 @@ class DataSourceRetrieverTest {
             .title("Test movie")
             .description("")
             .firstAirDate(LocalDate.parse("1999-01-01"))
-            .mediaType(MediaType.MOVIE)
+            .mediaReleaseType(MediaReleaseType.MOVIE)
             .language("EN")
             .popularity(200.0)
             .build();

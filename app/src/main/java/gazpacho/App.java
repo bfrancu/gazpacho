@@ -23,7 +23,7 @@ import gazpacho.core.identify.MediaIdentifier;
 import gazpacho.core.identify.QueryTokensParser;
 import gazpacho.core.identify.Tmdb.*;
 import gazpacho.core.model.MediaItem;
-import gazpacho.core.model.MediaType;
+import gazpacho.core.model.MediaReleaseType;
 import gazpacho.core.stream.plex.HttpPlexClient;
 import gazpacho.core.stream.plex.PlexClient;
 import gazpacho.core.stream.plex.match.PlexMediaMatcher;
@@ -110,7 +110,7 @@ public class App {
             GetChildrenResponse response = plexClient.getChildren(show.get().ratingKey());
 
             for (Metadata metadata : response.mediaContainer().metadata()) {
-                if (metadata.type().equals(MediaType.TV_SEASON) &&
+                if (metadata.type().equals(MediaReleaseType.TV_SEASON) &&
                     metadata.index().equals(mediaItem.season())) {
                     return Optional.of(Season.fromMetadata(metadata));
                 }
@@ -126,7 +126,7 @@ public class App {
             GetChildrenResponse response = plexClient.getChildren(season.get().ratingKey());
 
             for (Metadata metadata : response.mediaContainer().metadata()) {
-                if (metadata.type().equals(MediaType.TV_EPISODE) &&
+                if (metadata.type().equals(MediaReleaseType.TV_EPISODE) &&
                     metadata.index().equals(mediaItem.episode())) {
                     return Optional.of(Episode.fromMetadata(metadata));
                 }
@@ -178,7 +178,7 @@ public class App {
                 .firstAirDate(LocalDate.parse("2021-12-07"))
                 .season(4)
                 .episode(2)
-                .mediaType(MediaType.TV_EPISODE)
+                .mediaReleaseType(MediaReleaseType.TV_EPISODE)
                 .popularity(100.0)
                 .build();
 
@@ -187,7 +187,7 @@ public class App {
                 .description("")
                 .language("EN")
                 .firstAirDate(LocalDate.parse("2024-12-01"))
-                .mediaType(MediaType.MOVIE)
+                .mediaReleaseType(MediaReleaseType.MOVIE)
                 .popularity(40.0)
                 .build();
 
@@ -343,7 +343,7 @@ public class App {
                 .title("")
                 .description("")
                 .firstAirDate(LocalDate.parse("2024-12-05"))
-                .mediaType(MediaType.MOVIE)
+                .mediaReleaseType(MediaReleaseType.MOVIE)
                 .language("EN")
                 .popularity(100.0)
                 .build();

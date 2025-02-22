@@ -20,13 +20,13 @@ public class ItemQueryConverter {
     }
 
     private String getTextRepresentation(MediaItem mediaItem, String delim) {
-        return (switch(mediaItem.mediaType()) {
+        return (switch(mediaItem.mediaReleaseType()) {
             case MOVIE -> getMovieQuery(mediaItem, delim);
             case TV_SEASON -> getTvSeasonQuery(mediaItem, delim);
             case TV_EPISODE -> getTvEpisodeQuery(mediaItem, delim);
             case TV_SHOW,
                  UNKNOWN -> throw new IllegalArgumentException(
-                         String.format("Invalid media item %s type %s", mediaItem, mediaItem.mediaType()));
+                         String.format("Invalid media item %s type %s", mediaItem, mediaItem.mediaReleaseType()));
         });
     }
 

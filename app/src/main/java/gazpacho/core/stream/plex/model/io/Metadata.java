@@ -2,7 +2,7 @@ package gazpacho.core.stream.plex.model.io;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import gazpacho.core.model.MediaType;
+import gazpacho.core.model.MediaReleaseType;
 import lombok.Builder;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public record Metadata(String ratingKey,
                        String guid,
                        String slug,
                        String studio,
-                       MediaType type,
+                       MediaReleaseType type,
                        String title,
                        String contentRating,
                        String summary,

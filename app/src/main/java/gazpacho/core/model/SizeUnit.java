@@ -1,4 +1,4 @@
-package gazpacho.core.datasource.filelist.model;
+package gazpacho.core.model;
 
 public enum SizeUnit {
     KB,

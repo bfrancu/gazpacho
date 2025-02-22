@@ -2,7 +2,7 @@ package gazpacho.core.stream.plex.model.io;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import gazpacho.core.model.MediaType;
+import gazpacho.core.model.MediaReleaseType;
 import lombok.Builder;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record Directory(Boolean directory,
-                        MediaType type,
+                        MediaReleaseType type,
                         Long updatedAt,
                         Long createdAt,
                         Long contentChangedAt,

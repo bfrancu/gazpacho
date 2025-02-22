@@ -1,11 +1,12 @@
 package gazpacho.core.datasource.filelist.navigate;
 
 import gazpacho.core.datasource.filelist.model.*;
+import gazpacho.core.model.SizeUnit;
 import gazpacho.core.model.VideoQuality;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import gazpacho.core.model.MediaItem;
-import gazpacho.core.model.MediaType;
+import gazpacho.core.model.MediaReleaseType;
 import org.jsoup.Connection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -142,7 +143,7 @@ class MediaSearcherTest {
     private static final String TEST_URL = "https://testurl.io/browse.php";
 
     private static final MediaItem MEDIA_ITEM = MediaItem.builder()
-            .mediaType(MediaType.MOVIE)
+            .mediaReleaseType(MediaReleaseType.MOVIE)
             .popularity(100.0)
             .title("The Iron Giant")
             .language("EN")

@@ -1,7 +1,7 @@
 package gazpacho.core.datasource.filelist.match;
 
 import gazpacho.core.datasource.filelist.model.SearchResultEntry;
-import gazpacho.core.datasource.filelist.model.SizeUnit;
+import gazpacho.core.model.SizeUnit;
 
 import java.util.Comparator;
 
