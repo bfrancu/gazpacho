@@ -34,11 +34,13 @@ public class MediaItemSubscription extends Versioned {
     @JoinColumn(name = "tmdb_id")
     private MediaItem item;
 
-    @OneToMany(mappedBy = Wish_.SUBSCRIPTION, cascade = CascadeType.REMOVE)
     @ToString.Exclude
+    @OneToMany(mappedBy = Wish_.SUBSCRIPTION,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
     @FetchProfileOverride(
             profile = MediaItemSubscription_.PROFILE_WITH_ITEM_SUBSCRIBERS,
-            mode = FetchMode.JOIN)
+            mode = FetchMode.SUBSELECT)
     private Set<Wish> subscribers;
 
     @Column(name = "last_scanned")

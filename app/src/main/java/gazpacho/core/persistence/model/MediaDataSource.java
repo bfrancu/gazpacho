@@ -6,11 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.FetchProfile;
-import org.hibernate.annotations.FetchProfileOverride;
 
-@FetchProfile(name = "WithRequest")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -24,14 +20,10 @@ public class MediaDataSource extends Versioned {
     @Column(name = "data_source_id")
     private Long id;
 
-    /*
-    @OneToOne(optional = false, mappedBy = Request_.SOURCE, fetch = FetchType.LAZY)
     @ToString.Exclude
-    @FetchProfileOverride(
-            profile = MediaDataSource_.PROFILE_WITH_REQUEST,
-            mode = FetchMode.JOIN)
+    @OneToOne(optional = false)
+    @JoinColumn(name = "request_id")
     private Request request;
-    */
 
     @Basic(optional=false)
     @Column(length=100, unique = true, name = "torrent_link")

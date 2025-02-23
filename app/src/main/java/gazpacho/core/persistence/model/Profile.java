@@ -1,17 +1,17 @@
 package gazpacho.core.persistence.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
 import lombok.Data;
 import lombok.ToString;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.FetchProfile;
-import org.hibernate.annotations.FetchProfileOverride;
+import org.hibernate.annotations.*;
 
 import java.util.Set;
+
 
 @FetchProfile(name = "WithRequestsWishlist")
 @Data
@@ -22,7 +22,6 @@ import java.util.Set;
 @Entity
 @Table(name = "\"UserProfiles\"")
 public class Profile extends Versioned {
-
     @Id
     @NonNull
     @Column(unique = true, name = "phone_number")
@@ -32,15 +31,21 @@ public class Profile extends Versioned {
         this.phoneNumber = phoneNumber;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = Request_.ORIGINATOR)
     @ToString.Exclude
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = Request_.ORIGINATOR,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
     @FetchProfileOverride(
             profile = Profile_.PROFILE_WITH_REQUESTS_WISHLIST,
             mode = FetchMode.JOIN)
     private Set<Request> requests;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = Wish_.PROFILE)
     @ToString.Exclude
+    @OneToMany(fetch = FetchType.LAZY,
+            mappedBy = Wish_.PROFILE,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
     @FetchProfileOverride(
             profile = Profile_.PROFILE_WITH_REQUESTS_WISHLIST,
             mode = FetchMode.JOIN)

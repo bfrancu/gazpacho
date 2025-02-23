@@ -6,7 +6,11 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.FetchProfile;
+import org.hibernate.annotations.FetchProfileOverride;
 
+@FetchProfile(name = "WithSubscriptionProfile")
 @NamedEntityGraph(
         name = "wish-with-subscription-profile",
         attributeNodes = {
@@ -28,11 +32,17 @@ public class Wish extends Versioned {
     @Column(name = "wish_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "subscription_id")
+    @FetchProfileOverride(
+            profile = Wish_.PROFILE_WITH_SUBSCRIPTION_PROFILE,
+            mode = FetchMode.JOIN)
     private MediaItemSubscription subscription;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "phone_number")
+    @FetchProfileOverride(
+            profile = Wish_.PROFILE_WITH_SUBSCRIPTION_PROFILE,
+            mode = FetchMode.JOIN)
     private Profile profile;
 }

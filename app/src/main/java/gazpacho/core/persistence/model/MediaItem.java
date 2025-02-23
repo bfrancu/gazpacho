@@ -33,12 +33,14 @@ public class MediaItem extends Versioned {
     @Column(name = "media_type")
     private MediaType mediaType;
 
-    @OneToOne(mappedBy = MediaItemSubscription_.ITEM)
     @ToString.Exclude
+    @OneToOne(mappedBy = MediaItemSubscription_.ITEM,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
     private MediaItemSubscription subscription;
 
-    @OneToMany(mappedBy = Request_.ITEM)
     @ToString.Exclude
+    @OneToMany(mappedBy = Request_.ITEM)
     private Set<Request> requests;
 
     @Basic(optional=false)

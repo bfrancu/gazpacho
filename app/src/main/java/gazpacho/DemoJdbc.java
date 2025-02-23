@@ -1,6 +1,10 @@
 package gazpacho;
 
+import gazpacho.core.model.RequestStatus;
+import gazpacho.core.model.SizeUnit;
 import gazpacho.core.persistence.model.*;
+import gazpacho.core.persistence.query.MediaDataSourceQueries;
+import gazpacho.core.persistence.query.MediaDataSourceQueries_;
 import gazpacho.core.persistence.query.ProfileQueries_;
 import gazpacho.core.persistence.table.ProfileTable;
 import jakarta.persistence.*;
@@ -19,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
@@ -37,11 +42,11 @@ public class DemoJdbc {
     }
 
     public static void main(String[] args) throws SQLException {
-        testHibernateSessionFactory();
+        testMediaDataSourceQueries();
     }
 
-    private static void testHibernateSessionFactory() {
-        Configuration hibernateConfig = new Configuration()
+    private static Configuration getHibernateConfig() {
+        return new Configuration()
                 .addAnnotatedClass(MediaSize.class)
                 .addAnnotatedClass(Versioned.class)
                 .addAnnotatedClass(MediaDataSource.class)
@@ -50,8 +55,71 @@ public class DemoJdbc {
                 .addAnnotatedClass(MediaItemSubscription.class)
                 .addAnnotatedClass(Request.class)
                 .addAnnotatedClass(Wish.class);
-        ;/*
-        */
+    }
+
+    private static void testMediaDataSourceQueries() {
+        Configuration hibernateConfig = getHibernateConfig();
+        SessionFactory sessionFactory = hibernateConfig.buildSessionFactory();
+
+        String numb1 = "03212364";
+        Profile profile = Profile.builder()
+                .phoneNumber(numb1)
+                .firstName("Billy")
+                .lastName("Bob")
+                .build();
+
+        Request request = Request.builder()
+//                .id(31L)
+                .originator(profile)
+                .status(RequestStatus.PENDING)
+                .created(LocalDateTime.now())
+                .lastUpdated(LocalDateTime.now())
+                .query("q")
+                .build();
+
+        MediaDataSource mediaDataSource = MediaDataSource.builder()
+//                .id(4123L)
+                .torrentLink("ldsadas")
+                .torrentId("1")
+                .downloadLocation("downloads/")
+                .request(request)
+                .finished(false)
+                .mediaSize(new MediaSize(SizeUnit.GB, 2.0))
+                .lastUpdated(LocalDateTime.now())
+                .build();
+
+        LOGGER.info("Request {}", request);
+
+        sessionFactory.inTransaction(session -> {
+            session.persist(profile);
+            session.persist(request);
+            session.persist(mediaDataSource);
+        });
+
+
+        ProfileTable profileTable = new ProfileTable(sessionFactory);
+        profileTable.getProfileByPhoneNumber(profile.getPhoneNumber()).ifPresent(p -> {
+            LOGGER.info("Profile {}", p);
+            p.getRequests().forEach(r -> LOGGER.info("Request {}", r));
+        });
+
+        sessionFactory.inTransaction(session -> {
+            MediaDataSourceQueries queries = new MediaDataSourceQueries_(session);
+            List<MediaDataSource> dataSources = queries.findDataSourceByTorrentId("1");
+            if (null != dataSources && !dataSources.isEmpty()) {
+                dataSources.forEach(source -> {
+                    LOGGER.info("Data source {}", source);
+                    if (null != source.getRequest()) {
+                        LOGGER.info("Request {}", source.getRequest());
+                    }
+                });
+            }
+        });
+    }
+
+    private static void testHibernateSessionFactory() {
+        Configuration hibernateConfig = getHibernateConfig();
+        SessionFactory sessionFactory = hibernateConfig.buildSessionFactory();
 
         String numb1 = "07541425";
         Profile profile = Profile.builder()
@@ -66,9 +134,6 @@ public class DemoJdbc {
                 .firstName("Menumorut")
                 .build();
 
-
-
-        SessionFactory sessionFactory = hibernateConfig.buildSessionFactory();
         ProfileTable profileTable = new ProfileTable(sessionFactory);
         profileTable.persist(profile);
         profileTable.persist(profile2);

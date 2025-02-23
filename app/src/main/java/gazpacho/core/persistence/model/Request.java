@@ -4,6 +4,7 @@ import gazpacho.core.model.RequestStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.FetchProfile;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 )
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@NoArgsConstructor
 @ToString(callSuper = true)
 @SuperBuilder
 @Entity
@@ -30,17 +32,22 @@ public class Request extends Versioned {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @EqualsAndHashCode.Include
+    @Column(name = "request_id")
     private Long id;
 
+    @ToString.Exclude
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "phone_number")
     private Profile originator;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "data_source_id")
+    @OneToOne(fetch = FetchType.LAZY,
+            mappedBy = MediaDataSource_.REQUEST,
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true)
     private MediaDataSource source;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @ManyToOne(/*optional = false,*/ fetch = FetchType.LAZY)
     @JoinColumn(name = "tmdb_id")
     private MediaItem item;
 
@@ -52,7 +59,7 @@ public class Request extends Versioned {
     private LocalDateTime created;
 
     @Basic(optional = false)
-    @Column(name = "request_query", length = 200)
+    @Column(name = "request_query", length = 200, unique = true)
     private String query;
 }
 

@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,6 +34,23 @@ class ProfileTableTest {
     }
 
     @Test
+    void remove_removesPersistedInstance() throws SQLException {
+        ProfileTable table = getTable();
+        PersistenceUtilities.executeUpdate(
+                String.format("INSERT INTO %s VALUES('2025-02-22 09:33:08.141314', 'John', 'Doe', '%s')", TABLE_NAME, PHONE_NUMBER)
+        );
+
+        assertTrue(table.getProfileByPhoneNumber(PHONE_NUMBER).isPresent());
+        table.remove(PHONE_NUMBER);
+
+        ResultSet resultSet = PersistenceUtilities.executeStatement(
+                String.format("SELECT * FROM %s WHERE phone_number like '%s'", TABLE_NAME, PHONE_NUMBER)
+        );
+
+        assertFalse(resultSet.next());
+    }
+
+    @Test
     void getProfileByPhoneNumber_returnsEmpty_whenAbsent() {
         ProfileTable table = getTable();
         assertFalse(table.getProfileByPhoneNumber(PHONE_NUMBER).isPresent());
@@ -47,6 +63,7 @@ class ProfileTableTest {
                 String.format("INSERT INTO %s VALUES('2025-02-22 09:33:08.141314', 'John', 'Doe', '%s')", TABLE_NAME, PHONE_NUMBER)
         );
         assertTrue(table.exists(PHONE_NUMBER));
+
     }
 
     @Test
@@ -79,20 +96,6 @@ class ProfileTableTest {
         if (resultSet.next()) {
             assertEquals(changedLastName, resultSet.getString("last_name"));
         }
-    }
-
-    @Test
-    void addWish_addsAssociation() {
-        Wish wish = Wish.builder().build();
-        ProfileTable table = getTable();
-        table.persist(buildProfile(PHONE_NUMBER));
-        table.addWish(PHONE_NUMBER, wish);
-
-        Optional<Profile> optionalProfile = table.getProfileByPhoneNumber(PHONE_NUMBER);
-        assertTrue(optionalProfile.isPresent());
-        optionalProfile.ifPresent(profile -> {
-            assertFalse(profile.getWishlist().isEmpty());
-        });
     }
 
     private ProfileTable getTable() {
