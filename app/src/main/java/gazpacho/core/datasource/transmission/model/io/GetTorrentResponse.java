@@ -7,7 +7,7 @@ import lombok.extern.jackson.Jacksonized;
 
 @SuperBuilder
 @Jacksonized
-public class GetResponse extends Response<GetResponse.Arguments> {
+public class GetTorrentResponse extends Response<GetTorrentResponse.Arguments> {
     @Builder
     public record Arguments(ImmutableList<Torrent> torrents) {}
 }

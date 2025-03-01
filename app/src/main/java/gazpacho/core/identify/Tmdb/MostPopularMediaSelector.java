@@ -1,7 +1,7 @@
 package gazpacho.core.identify.Tmdb;
 
 import gazpacho.core.identify.MediaItemQueryTokens;
-import gazpacho.core.model.MediaItem;
+import gazpacho.core.model.VisualMedia;
 import gazpacho.core.util.CollectionUtils;
 import gazpacho.core.util.KeyExtractor;
 import gazpacho.core.util.StringUtils;
@@ -30,13 +30,13 @@ public class MostPopularMediaSelector implements TmdbMediaSelector {
     @NonNull private final Logger logger;
 
     @Override
-    public Optional<MediaItem> selectMovie(@NonNull List<Movie> movieList,
-                                         @NonNull MediaItemQueryTokens ignored) {
+    public Optional<VisualMedia> selectMovie(@NonNull List<Movie> movieList,
+                                             @NonNull MediaItemQueryTokens ignored) {
         logger.info("Select movie {}", movieList);
         return getMostPopularMovie(movieList)
                 .map(movie -> {
                     try {
-                        return MediaItem.fromMovie(getMoviesApi().getDetails(movie.getId(), movie.getOriginalLanguage()));
+                        return VisualMedia.fromMovie(getMoviesApi().getDetails(movie.getId(), movie.getOriginalLanguage()));
                     } catch (TmdbException e) {
                         logger.error("TmdbException caught", e);
                     }
@@ -45,15 +45,15 @@ public class MostPopularMediaSelector implements TmdbMediaSelector {
     }
 
     @Override
-    public Optional<MediaItem> selectTvSeries(@NonNull List<TvSeries> seriesList,
-                                               @NonNull MediaItemQueryTokens queryTokens) {
+    public Optional<VisualMedia> selectTvSeries(@NonNull List<TvSeries> seriesList,
+                                                @NonNull MediaItemQueryTokens queryTokens) {
         logger.info("Select show {}, {}", seriesList, queryTokens);
         return getMostPopularShow(seriesList)
                 .map(show -> {
                     try {
                         if (checkTvSeriesSeasonsCount(show, queryTokens) &&
                                 checkTvSeriesEpisodesCount(show, queryTokens)) {
-                            return MediaItem.fromShow(
+                            return VisualMedia.fromShow(
                                     getTvSeriesApi().getDetails(show.getId(), show.getOriginalLanguage()),
                                     queryTokens.season(),
                                     queryTokens.episode());
@@ -66,9 +66,9 @@ public class MostPopularMediaSelector implements TmdbMediaSelector {
     }
 
     @Override
-    public MediaItem selectClosestMatch(@NonNull MediaItem firstMatch,
-                                        @NonNull MediaItem secondMatch,
-                                        @NonNull MediaItemQueryTokens queryTokens) {
+    public VisualMedia selectClosestMatch(@NonNull VisualMedia firstMatch,
+                                          @NonNull VisualMedia secondMatch,
+                                          @NonNull MediaItemQueryTokens queryTokens) {
         logger.info("Select closest match first {} second {}", firstMatch, secondMatch);
         var optTvShowMatch = checkForTvShowInQueryTokens(firstMatch, secondMatch, queryTokens);
         if (optTvShowMatch.isPresent()) {
@@ -81,8 +81,8 @@ public class MostPopularMediaSelector implements TmdbMediaSelector {
            return secondMatch;
         }
 
-        double movieTitleSimilarity = StringUtils.similarity(firstMatch.title(), queryTokens.name());
-        double showTitleSimilarity = StringUtils.similarity(secondMatch.title(), queryTokens.name());
+        double movieTitleSimilarity = StringUtils.similarity(firstMatch.metadata().title(), queryTokens.name());
+        double showTitleSimilarity = StringUtils.similarity(secondMatch.metadata().title(), queryTokens.name());
 
         if (movieTitleSimilarity < MIN_THRESHOLD_TITLE_SIMILARITY &&
                 showTitleSimilarity >= MIN_THRESHOLD_TITLE_SIMILARITY) {
@@ -92,15 +92,15 @@ public class MostPopularMediaSelector implements TmdbMediaSelector {
             return firstMatch;
         }
 
-        if (firstMatch.popularity() > secondMatch.popularity()) {
+        if (firstMatch.metadata().popularity() > secondMatch.metadata().popularity()) {
             return firstMatch;
         }
         return secondMatch;
     }
 
-    private Optional<MediaItem> checkForTvShowInQueryTokens(MediaItem firstMatch,
-                                                            MediaItem secondMatch,
-                                                            MediaItemQueryTokens queryTokens) {
+    private Optional<VisualMedia> checkForTvShowInQueryTokens(VisualMedia firstMatch,
+                                                              VisualMedia secondMatch,
+                                                              MediaItemQueryTokens queryTokens) {
         if (null != queryTokens.season()) {
             if (firstMatch.isMovie() && !secondMatch.isMovie()) {
                 return Optional.of(secondMatch);
@@ -113,18 +113,21 @@ public class MostPopularMediaSelector implements TmdbMediaSelector {
         return Optional.empty();
     }
 
-    private boolean fullMatch(MediaItem mediaItem, MediaItemQueryTokens queryTokens) {
-        boolean titleMatch = mediaItem.title().toLowerCase(Locale.ROOT)
+    private boolean fullMatch(VisualMedia visualMedia, MediaItemQueryTokens queryTokens) {
+        boolean titleMatch = visualMedia.metadata()
+                .title()
+                .toLowerCase(Locale.ROOT)
                 .equals(queryTokens.name().toLowerCase(Locale.ROOT));
-        return titleMatch && yearMatch(mediaItem, queryTokens);
+        return titleMatch && yearMatch(visualMedia, queryTokens);
     }
 
-    private boolean yearMatch(MediaItem mediaItem, MediaItemQueryTokens queryTokens) {
+    private boolean yearMatch(VisualMedia visualMedia, MediaItemQueryTokens queryTokens) {
         if (null != queryTokens.releaseYear()) {
             try {
-                return mediaItem.firstAirDate().getYear() == queryTokens.releaseYear();
+                return visualMedia.metadata()
+                        .firstAirDate().getYear() == queryTokens.releaseYear();
             } catch (IllegalArgumentException e) {
-                logger.error("Invalid date format {}", mediaItem.firstAirDate(), e);
+                logger.error("Invalid date format {}", visualMedia.metadata().firstAirDate(), e);
                 return false;
             }
         }

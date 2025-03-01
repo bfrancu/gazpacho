@@ -17,16 +17,16 @@ public class MediaDataSourceTable extends EntityCrudBaseTable<String, MediaDataS
         super(sessionFactory);
     }
 
-    public Optional<MediaDataSource> getDataSourceByTorrentId(@NonNull String torrentId) {
-        return sessionFactory.fromTransaction(session -> get(torrentId, session));
+    public Optional<MediaDataSource> getDataSourceByTorrentId(@NonNull String torrentHash) {
+        return sessionFactory.fromTransaction(session -> get(torrentHash, session));
     }
 
     @Override
-    protected MediaDataSource retrieve(MediaDataSourceQueries q, String torrentId) throws ObjectNotFoundException {
-        List<MediaDataSource> dataSources = q.findDataSourceByTorrentId(torrentId);
+    protected MediaDataSource retrieve(MediaDataSourceQueries q, String torrentHash) throws ObjectNotFoundException {
+        List<MediaDataSource> dataSources = q.findDataSourceByTorrentHash(torrentHash);
         if (dataSources.isEmpty()) {
-            LOGGER.warn("No media data source found for torrent id {}", torrentId);
-            throw new ObjectNotFoundException(Optional.ofNullable(torrentId), "MediaDataSource");
+            LOGGER.warn("No media data source found for torrent id {}", torrentHash);
+            throw new ObjectNotFoundException(Optional.ofNullable(torrentHash), "MediaDataSource");
         }
         return dataSources.getFirst();
     }

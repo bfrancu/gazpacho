@@ -1,12 +1,9 @@
 package gazpacho.core.datasource.filelist.navigate;
 
 import gazpacho.core.datasource.filelist.model.*;
-import gazpacho.core.model.SizeUnit;
-import gazpacho.core.model.VideoQuality;
+import gazpacho.core.model.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import gazpacho.core.model.MediaItem;
-import gazpacho.core.model.MediaReleaseType;
 import org.jsoup.Connection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -142,14 +139,21 @@ class MediaSearcherTest {
     private static final Document RESULTS_PAGE_DOC = Jsoup.parse(STATIC_HTML_DOCUMENT);
     private static final String TEST_URL = "https://testurl.io/browse.php";
 
-    private static final MediaItem MEDIA_ITEM = MediaItem.builder()
-            .mediaReleaseType(MediaReleaseType.MOVIE)
-            .popularity(100.0)
-            .title("The Iron Giant")
-            .language("EN")
-            .description("Iron giant")
-            .originCountry("US")
-            .firstAirDate(LocalDate.parse("1999-01-01"))
+    private static final VisualMedia MEDIA_ITEM = VisualMedia.builder()
+            .metadata(MediaMetadata.builder()
+                    .tmdbId(10L)
+                    .mediaType(MediaType.MOVIE)
+                    .popularity(100.0)
+                    .title("The Iron Giant")
+                    .language("EN")
+                    .description("Iron giant")
+                    .originCountry("US")
+                    .firstAirDate(LocalDate.parse("1999-01-01"))
+                    .build())
+            .release(MediaRelease.builder()
+                    .mediaReleaseType(MediaReleaseType.MOVIE)
+                    .releaseDate(LocalDate.parse("1999-01-01"))
+                    .build())
             .build();
 
     @Mock

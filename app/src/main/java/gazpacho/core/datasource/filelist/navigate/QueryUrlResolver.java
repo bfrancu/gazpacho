@@ -2,7 +2,7 @@ package gazpacho.core.datasource.filelist.navigate;
 
 import gazpacho.core.datasource.filelist.match.ItemQueryConverter;
 import gazpacho.core.datasource.filelist.model.MediaCategory;
-import gazpacho.core.model.MediaItem;
+import gazpacho.core.model.VisualMedia;
 import lombok.NonNull;
 
 import java.util.Map;
@@ -25,8 +25,8 @@ public class QueryUrlResolver {
         this.itemQueryConverter = itemQueryConverter;
     }
 
-    public String getQueryUrl(@NonNull MediaItem mediaItem) {
-        String searchQueryValue = itemQueryConverter.getQuerySearchValue((mediaItem));
+    public String getQueryUrl(@NonNull VisualMedia visualMedia) {
+        String searchQueryValue = itemQueryConverter.getQuerySearchValue((visualMedia));
         return getUrl(searchQueryValue);
     }
 

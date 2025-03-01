@@ -8,7 +8,7 @@ import gazpacho.core.datasource.filelist.navigate.MediaSearcher;
 import gazpacho.core.datasource.filelist.navigate.SessionHandler;
 import gazpacho.core.exception.NonRetryableException;
 import gazpacho.core.exception.RetryableException;
-import gazpacho.core.model.MediaItem;
+import gazpacho.core.model.VisualMedia;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
@@ -70,15 +70,15 @@ public class DataSourceRetriever implements MediaDataSourceRetriever {
     }
 
     @Override
-    public Path retrieveDataSource(@NonNull MediaItem mediaItem) {
+    public Path retrieveDataSource(@NonNull VisualMedia visualMedia) {
         try {
             Connection connection = sessionHandler.getActiveSession();
             logger.info("Active connection established");
-            List<SearchResultEntry> searchResults = mediaSearcher.searchItem(mediaItem, connection);
+            List<SearchResultEntry> searchResults = mediaSearcher.searchItem(visualMedia, connection);
             logger.info("Search results {}", searchResults);
-            Optional<SearchResultEntry> bestMatch = matchingStrategy.select(searchResults, mediaItem);
+            Optional<SearchResultEntry> bestMatch = matchingStrategy.select(searchResults, visualMedia);
             if (bestMatch.isEmpty()) {
-                throw new NonRetryableException(String.format("No file found for %s", mediaItem));
+                throw new NonRetryableException(String.format("No file found for %s", visualMedia));
             }
             return dataSourceDownloader.download(bestMatch.get(), connection);
         } catch (IOException | InterruptedException e) {

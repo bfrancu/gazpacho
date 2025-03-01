@@ -16,9 +16,9 @@ import lombok.experimental.SuperBuilder;
 @Table(name = "\"DataSources\"")
 public class MediaDataSource extends Versioned {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "data_source_id")
-    private Long id;
+    @Basic(optional=false)
+    @Column(length=100, unique = true, name = "torrent_hash")
+    private String torrentHash;
 
     @ToString.Exclude
     @OneToOne(optional = false)
@@ -26,12 +26,8 @@ public class MediaDataSource extends Versioned {
     private Request request;
 
     @Basic(optional=false)
-    @Column(length=100, unique = true, name = "torrent_link")
-    private String torrentLink;
-
-    @Basic(optional=false)
-    @Column(length=100, unique = true, name = "torrent_id")
-    private String torrentId;
+    @Column(length=100, unique = true, name = "torrent_name")
+    private String torrentName;
 
     @Basic(optional=false)
     @Column(length=150, unique = true, name = "local_download_path")

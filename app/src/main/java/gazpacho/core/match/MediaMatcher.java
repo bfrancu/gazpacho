@@ -1,9 +1,9 @@
 package gazpacho.core.match;
 
-import gazpacho.core.model.MediaItem;
+import gazpacho.core.model.VisualMedia;
 import lombok.NonNull;
 
 @FunctionalInterface
 public interface MediaMatcher {
-    boolean match(@NonNull MediaItem mediaItem);
+    boolean match(@NonNull VisualMedia visualMedia);
 }

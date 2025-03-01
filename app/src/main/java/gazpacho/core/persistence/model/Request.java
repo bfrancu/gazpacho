@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Check;
 import org.hibernate.annotations.FetchProfile;
 
 import java.time.LocalDateTime;
@@ -48,7 +49,9 @@ public class Request extends Versioned {
 
     @ToString.Exclude
     @ManyToOne(/*optional = false,*/ fetch = FetchType.LAZY)
-    @JoinColumn(name = "tmdb_id")
+    @JoinColumns({
+            @JoinColumn(name = "tmdb_id"),
+            @JoinColumn(name = "media_type")})
     private MediaItem item;
 
     @Enumerated(EnumType.STRING)
@@ -61,5 +64,11 @@ public class Request extends Versioned {
     @Basic(optional = false)
     @Column(name = "request_query", length = 200, unique = true)
     private String query;
+
+    @Check(constraints = "season > 0")
+    private Integer season;
+
+    @Check(constraints = "episode > 0")
+    private Integer episode;
 }
 

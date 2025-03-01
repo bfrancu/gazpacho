@@ -1,7 +1,7 @@
 package gazpacho.core.stream.plex.match;
 
 import gazpacho.core.match.MediaMatcher;
-import gazpacho.core.model.MediaItem;
+import gazpacho.core.model.VisualMedia;
 import gazpacho.core.model.MediaReleaseType;
 import gazpacho.core.stream.plex.PlexClient;
 import gazpacho.core.stream.plex.model.*;
@@ -22,31 +22,32 @@ public class PlexMediaMatcher implements MediaMatcher {
     }
 
     @Override
-    public boolean match(@NonNull MediaItem mediaItem) {
-        Optional<?> matchedValue = switch (mediaItem.mediaReleaseType()) {
-            case MOVIE -> searchMovie(mediaItem);
-            case TV_SEASON -> searchSeason(mediaItem);
-            case TV_EPISODE -> searchEpisode(mediaItem);
+    public boolean match(@NonNull VisualMedia visualMedia) {
+        Optional<?> matchedValue = switch (visualMedia.release().mediaReleaseType()) {
+            case MOVIE -> searchMovie(visualMedia);
+            case TV_SEASON -> searchSeason(visualMedia);
+            case TV_EPISODE -> searchEpisode(visualMedia);
             default -> throw new IllegalArgumentException(
-                    String.format("Media type %s not supported", mediaItem.mediaReleaseType()));
+                    String.format("Media type %s not supported", visualMedia.release().mediaReleaseType()));
         };
         return matchedValue.isPresent();
     }
 
-    public Optional<Movie> searchMovie(MediaItem mediaItem) {
-        if (!mediaItem.isMovie()) {
+    public Optional<Movie> searchMovie(VisualMedia visualMedia) {
+        if (!visualMedia.isMovie()) {
             return Optional.empty();
         }
 
         for (Library library : mediaTypeLibraryMap.getOrDefault(MediaReleaseType.MOVIE, List.of())) {
             SearchResponse response = plexClient.search(
                     library.sectionId(),
-                    mediaItem.title(),
+                    visualMedia.metadata().title(),
                     SearchScope.MOVIE
             );
 
             for (Metadata metadata : response.mediaContainer().metadata()) {
-                if (StringUtils.isNotBlank(metadata.title()) && mediaItem.title().equals(metadata.title())) {
+                if (StringUtils.isNotBlank(metadata.title())
+                        && visualMedia.metadata().title().equals(metadata.title())) {
                     return Optional.of(Movie.fromMetadata(metadata));
                 }
             }
@@ -54,20 +55,21 @@ public class PlexMediaMatcher implements MediaMatcher {
         return Optional.empty();
     }
 
-    public Optional<Show> searchShow(MediaItem mediaItem) {
-        if (mediaItem.isMovie()) {
+    public Optional<Show> searchShow(VisualMedia visualMedia) {
+        if (visualMedia.isMovie()) {
             return Optional.empty();
         }
 
         for (Library library : mediaTypeLibraryMap.getOrDefault(MediaReleaseType.TV_SHOW, List.of())) {
             SearchResponse response = plexClient.search(
                     library.sectionId(),
-                    mediaItem.title(),
+                    visualMedia.metadata().title(),
                     SearchScope.TV_SHOW
             );
 
             for (Metadata metadata : response.mediaContainer().metadata()) {
-                if (StringUtils.isNotBlank(metadata.title()) && mediaItem.title().equals(metadata.title())) {
+                if (StringUtils.isNotBlank(metadata.title())
+                        && visualMedia.metadata().title().equals(metadata.title())) {
                     return Optional.of(Show.fromMetadata(metadata));
                 }
             }
@@ -75,15 +77,15 @@ public class PlexMediaMatcher implements MediaMatcher {
         return Optional.empty();
     }
 
-    public Optional<Season> searchSeason(MediaItem mediaItem) {
-        Optional<Show> show = searchShow(mediaItem);
+    public Optional<Season> searchSeason(VisualMedia visualMedia) {
+        Optional<Show> show = searchShow(visualMedia);
 
         if (show.isPresent()) {
             GetChildrenResponse response = plexClient.getChildren(show.get().ratingKey());
 
             for (Metadata metadata : response.mediaContainer().metadata()) {
                 if (MediaReleaseType.TV_SEASON.equals(metadata.type())
-                        && mediaItem.season().equals(metadata.index())) {
+                        && visualMedia.release().season().equals(metadata.index())) {
                     return Optional.of(Season.fromMetadata(metadata));
                 }
             }
@@ -91,15 +93,15 @@ public class PlexMediaMatcher implements MediaMatcher {
         return Optional.empty();
     }
 
-    private Optional<Episode> searchEpisode(MediaItem mediaItem) {
-        Optional<Season> season = searchSeason(mediaItem);
+    private Optional<Episode> searchEpisode(VisualMedia visualMedia) {
+        Optional<Season> season = searchSeason(visualMedia);
 
         if (season.isPresent()) {
             GetChildrenResponse response = plexClient.getChildren(season.get().ratingKey());
 
             for (Metadata metadata : response.mediaContainer().metadata()) {
                 if (MediaReleaseType.TV_EPISODE.equals(metadata.type())
-                        && mediaItem.episode().equals(metadata.index())) {
+                        && visualMedia.release().episode().equals(metadata.index())) {
                     return Optional.of(Episode.fromMetadata(metadata));
                 }
             }

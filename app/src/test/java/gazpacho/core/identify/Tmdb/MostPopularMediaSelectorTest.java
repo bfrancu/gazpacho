@@ -1,8 +1,7 @@
 package gazpacho.core.identify.Tmdb;
 
 import gazpacho.core.identify.MediaItemQueryTokens;
-import gazpacho.core.model.MediaItem;
-import gazpacho.core.model.MediaReleaseType;
+import gazpacho.core.model.*;
 import info.movito.themoviedbapi.TmdbApi;
 import info.movito.themoviedbapi.TmdbMovies;
 import info.movito.themoviedbapi.TmdbTvSeasons;
@@ -58,7 +57,7 @@ public class MostPopularMediaSelectorTest {
         var optionalMediaItem = makeUnit().selectMovie(buildMovieList(15),
                 buildQueryTokens(null, null));
         assertTrue(optionalMediaItem.isPresent());
-        assertEquals(15, optionalMediaItem.get().popularity());
+        assertEquals(15, optionalMediaItem.get().metadata().popularity());
     }
 
     @Test
@@ -68,7 +67,7 @@ public class MostPopularMediaSelectorTest {
         var optionalMediaItem = makeUnit().selectTvSeries(buildTvSeries(10),
                 buildQueryTokens(5, 12));
         assertTrue(optionalMediaItem.isPresent());
-        assertEquals(10, optionalMediaItem.get().popularity());
+        assertEquals(10, optionalMediaItem.get().metadata().popularity());
     }
 
     @Test
@@ -93,23 +92,35 @@ public class MostPopularMediaSelectorTest {
 
     @Test
     public void selectClosestMatch_selectsMovie_whenFullMatch() {
-        MediaItem matchedMovie = MediaItem.builder()
-                .title("No country for old men")
-                .description("")
-                .language(ORIGINAL_LANG)
-                .firstAirDate(LocalDate.now())
-                .mediaReleaseType(MediaReleaseType.MOVIE)
-                .popularity(10.0)
+        VisualMedia matchedMovie = VisualMedia.builder()
+                .metadata(MediaMetadata.builder()
+                        .tmdbId(18L)
+                        .mediaType(MediaType.MOVIE)
+                        .title("No country for old men")
+                        .description("")
+                        .language(ORIGINAL_LANG)
+                        .firstAirDate(LocalDate.now())
+                        .popularity(10.0)
+                        .build())
+                .release(MediaRelease.builder()
+                        .mediaReleaseType(MediaReleaseType.MOVIE)
+                        .build())
                 .build();
 
-        MediaItem matchedShow = MediaItem.builder()
-                .title("No country for young men")
-                .description("")
-                .language(ORIGINAL_LANG)
-                .firstAirDate(LocalDate.now())
-                .mediaReleaseType(MediaReleaseType.TV_SEASON)
-                .popularity(11.0)
-                .season(5)
+        VisualMedia matchedShow = VisualMedia.builder()
+                .metadata(MediaMetadata.builder()
+                        .tmdbId(19L)
+                        .mediaType(MediaType.MOVIE)
+                        .title("No country for young men")
+                        .description("")
+                        .language(ORIGINAL_LANG)
+                        .firstAirDate(LocalDate.now())
+                        .popularity(11.0)
+                        .build())
+                .release(MediaRelease.builder()
+                        .mediaReleaseType(MediaReleaseType.TV_SEASON)
+                        .season(5)
+                        .build())
                 .build();
 
         assertEquals(matchedMovie, makeUnit().selectClosestMatch(matchedMovie, matchedShow,
@@ -120,23 +131,36 @@ public class MostPopularMediaSelectorTest {
 
     @Test
     public void selectClosestMatch_selectsShow_whenFullMatch() {
-        MediaItem matchedShow = MediaItem.builder()
-                .title("Breaking bad")
-                .description("")
-                .language(ORIGINAL_LANG)
-                .firstAirDate(LocalDate.now())
-                .mediaReleaseType(MediaReleaseType.TV_SEASON)
-                .popularity(10.0)
-                .season(5)
+        VisualMedia matchedShow = VisualMedia.builder()
+                .metadata(MediaMetadata.builder()
+                        .tmdbId(12L)
+                        .mediaType(MediaType.TV)
+                        .title("Breaking bad")
+                        .mediaType(MediaType.TV)
+                        .description("")
+                        .language(ORIGINAL_LANG)
+                        .firstAirDate(LocalDate.now())
+                        .popularity(10.0)
+                        .build())
+                .release(MediaRelease.builder()
+                        .mediaReleaseType(MediaReleaseType.TV_SEASON)
+                        .season(5)
+                        .build())
                 .build();
 
-        MediaItem matchedMovie = MediaItem.builder()
-                .title("Breaking bread")
-                .description("")
-                .language(ORIGINAL_LANG)
-                .firstAirDate(LocalDate.now())
-                .mediaReleaseType(MediaReleaseType.MOVIE)
-                .popularity(100.0)
+        VisualMedia matchedMovie = VisualMedia.builder()
+                .metadata(MediaMetadata.builder()
+                        .title("Breaking bread")
+                        .tmdbId(13L)
+                        .mediaType(MediaType.MOVIE)
+                        .description("")
+                        .language(ORIGINAL_LANG)
+                        .firstAirDate(LocalDate.now())
+                        .popularity(100.0)
+                        .build())
+                .release(MediaRelease.builder()
+                        .mediaReleaseType(MediaReleaseType.MOVIE)
+                        .build())
                 .build();
 
         assertEquals(matchedShow, makeUnit().selectClosestMatch(matchedMovie, matchedShow,
@@ -149,23 +173,35 @@ public class MostPopularMediaSelectorTest {
     public void selectClosestMatch_selectsItemWithThresholdTitleSimilarity() {
         String queryTitle = "Lord of the rings";
 
-        MediaItem matchedShow = MediaItem.builder()
-                .title("Sopranos")
-                .description("")
-                .language(ORIGINAL_LANG)
-                .firstAirDate(LocalDate.parse("1999-05-01"))
-                .mediaReleaseType(MediaReleaseType.TV_SEASON)
-                .popularity(10.0)
-                .season(5)
+        VisualMedia matchedShow = VisualMedia.builder()
+                .metadata(MediaMetadata.builder()
+                        .title("Sopranos")
+                        .tmdbId(14L)
+                        .mediaType(MediaType.TV)
+                        .description("")
+                        .language(ORIGINAL_LANG)
+                        .firstAirDate(LocalDate.parse("1999-05-01"))
+                        .popularity(10.0)
+                        .build())
+                .release(MediaRelease.builder()
+                        .mediaReleaseType(MediaReleaseType.TV_SEASON)
+                        .season(5)
+                        .build())
                 .build();
 
-        MediaItem matchedMovie = MediaItem.builder()
-                .title("Lord of the rings, The two towers")
-                .description("")
-                .language(ORIGINAL_LANG)
-                .firstAirDate(LocalDate.now())
-                .mediaReleaseType(MediaReleaseType.MOVIE)
-                .popularity(100.0)
+        VisualMedia matchedMovie = VisualMedia.builder()
+                .metadata(MediaMetadata.builder()
+                        .tmdbId(15L)
+                        .mediaType(MediaType.MOVIE)
+                        .title("Lord of the rings, The two towers")
+                        .description("")
+                        .language(ORIGINAL_LANG)
+                        .firstAirDate(LocalDate.now())
+                        .popularity(100.0)
+                        .build())
+                .release(MediaRelease.builder()
+                        .mediaReleaseType(MediaReleaseType.MOVIE)
+                        .build())
                 .build();
 
         assertEquals(matchedMovie, makeUnit().selectClosestMatch(matchedMovie, matchedShow,
@@ -178,22 +214,34 @@ public class MostPopularMediaSelectorTest {
     public void selectClosestMatch_selectsMostPopularItem_whenBothHaveThresholdTitleSimilarity() {
         String title = "Grinch stole something";
 
-        MediaItem firstMatch = MediaItem.builder()
-                .title("Grinch stole Christmas")
-                .description("")
-                .language(ORIGINAL_LANG)
-                .firstAirDate(LocalDate.parse("1999-05-01"))
-                .mediaReleaseType(MediaReleaseType.MOVIE)
-                .popularity(100.0)
+        VisualMedia firstMatch = VisualMedia.builder()
+                .metadata(MediaMetadata.builder()
+                        .tmdbId(16L)
+                        .mediaType(MediaType.MOVIE)
+                        .title("Grinch stole Christmas")
+                        .description("")
+                        .language(ORIGINAL_LANG)
+                        .firstAirDate(LocalDate.parse("1999-05-01"))
+                        .popularity(100.0)
+                        .build())
+                .release(MediaRelease.builder()
+                        .mediaReleaseType(MediaReleaseType.MOVIE)
+                        .build())
                 .build();
 
-        MediaItem popularMatch = MediaItem.builder()
-                .title("Grinch stole my heart")
-                .description("")
-                .language(ORIGINAL_LANG)
-                .firstAirDate(LocalDate.now())
-                .mediaReleaseType(MediaReleaseType.MOVIE)
-                .popularity(500.0)
+        VisualMedia popularMatch = VisualMedia.builder()
+                .metadata(MediaMetadata.builder()
+                        .tmdbId(17L)
+                        .mediaType(MediaType.MOVIE)
+                        .title("Grinch stole my heart")
+                        .description("")
+                        .language(ORIGINAL_LANG)
+                        .firstAirDate(LocalDate.now())
+                        .popularity(500.0)
+                        .build())
+                .release(MediaRelease.builder()
+                        .mediaReleaseType(MediaReleaseType.MOVIE)
+                        .build())
                 .build();
 
         assertEquals(popularMatch, makeUnit().selectClosestMatch(firstMatch, popularMatch,
@@ -262,6 +310,7 @@ public class MostPopularMediaSelectorTest {
         showDetails.setOverview("test");
         showDetails.setOriginalLanguage(ORIGINAL_LANG);
         showDetails.setFirstAirDate("2020-02-20");
+        showDetails.setLastAirDate("2020-02-20");
         showDetails.setPopularity(popularity);
         showDetails.setNumberOfSeasons(season);
 

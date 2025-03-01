@@ -2,8 +2,7 @@ package gazpacho.core.identify.Tmdb;
 
 import gazpacho.core.identify.MediaItemQueryTokens;
 import gazpacho.core.identify.QueryTokensParser;
-import gazpacho.core.model.MediaItem;
-import gazpacho.core.model.MediaReleaseType;
+import gazpacho.core.model.*;
 import info.movito.themoviedbapi.model.core.Movie;
 import info.movito.themoviedbapi.model.core.TvSeries;
 import org.junit.jupiter.api.Test;
@@ -38,23 +37,35 @@ public class TmdbMediaIdentifierTest {
                     .season(2)
                     .build();
 
-    private static final MediaItem MOVIE_ITEM = MediaItem.builder()
-            .title(MOVIE_NAME)
-            .description("")
-            .language("EN")
-            .firstAirDate(LocalDate.now())
-            .mediaReleaseType(MediaReleaseType.MOVIE)
-            .popularity(100.0)
+    private static final VisualMedia MOVIE_ITEM = VisualMedia.builder()
+            .metadata(MediaMetadata.builder()
+                    .tmdbId(2L)
+                    .title(MOVIE_NAME)
+                    .mediaType(MediaType.MOVIE)
+                    .description("")
+                    .language("EN")
+                    .firstAirDate(LocalDate.now())
+                    .popularity(100.0)
+                    .build())
+            .release(MediaRelease.builder()
+                    .mediaReleaseType(MediaReleaseType.MOVIE)
+                    .build())
             .build();
 
-    private static final MediaItem SHOW_ITEM = MediaItem.builder()
-            .title(SHOW_NAME)
-            .description("")
-            .language("EN")
-            .firstAirDate(LocalDate.now())
-            .mediaReleaseType(MediaReleaseType.TV_SEASON)
-            .popularity(100.0)
-            .season(2)
+    private static final VisualMedia SHOW_ITEM = VisualMedia.builder()
+            .metadata(MediaMetadata.builder()
+                    .tmdbId(1L)
+                    .title(SHOW_NAME)
+                    .mediaType(MediaType.MOVIE)
+                    .description("")
+                    .language("EN")
+                    .firstAirDate(LocalDate.now())
+                    .popularity(100.0)
+                    .build())
+            .release(MediaRelease.builder()
+                    .mediaReleaseType(MediaReleaseType.TV_SEASON)
+                    .season(2)
+                    .build())
             .build();
 
     @Mock
@@ -104,13 +115,13 @@ public class TmdbMediaIdentifierTest {
         assertEquals(Optional.of(SHOW_ITEM), identifiedItem);
     }
 
-    private void mockMovieIdentification(String identifier, MediaItemQueryTokens tokens, MediaItem item) {
+    private void mockMovieIdentification(String identifier, MediaItemQueryTokens tokens, VisualMedia item) {
         when(queryTokensParser.parse(identifier)).thenReturn(Optional.of(tokens));
         when(searcher.searchMovies(tokens)).thenReturn(List.of(movie));
         when(mediaSelector.selectMovie(List.of(movie), tokens)).thenReturn(Optional.ofNullable(item));
     }
 
-    private void mockShowIdentification(String identifier, MediaItemQueryTokens tokens, MediaItem item) {
+    private void mockShowIdentification(String identifier, MediaItemQueryTokens tokens, VisualMedia item) {
         when(queryTokensParser.parse(identifier)).thenReturn(Optional.of(tokens));
         when(searcher.searchTvSeries(tokens)).thenReturn(List.of(tvSeries));
         when(mediaSelector.selectTvSeries(List.of(tvSeries), tokens)).thenReturn(Optional.ofNullable(item));

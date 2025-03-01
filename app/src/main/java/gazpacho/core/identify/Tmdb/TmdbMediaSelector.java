@@ -1,7 +1,7 @@
 package gazpacho.core.identify.Tmdb;
 
 import gazpacho.core.identify.MediaItemQueryTokens;
-import gazpacho.core.model.MediaItem;
+import gazpacho.core.model.VisualMedia;
 import info.movito.themoviedbapi.model.core.Movie;
 import info.movito.themoviedbapi.model.core.TvSeries;
 import lombok.NonNull;
@@ -19,8 +19,8 @@ public interface TmdbMediaSelector {
      * @param queryTokens
      * @return
      */
-    Optional<MediaItem> selectMovie(@NonNull List<Movie> movieList,
-                                  @NonNull MediaItemQueryTokens queryTokens);
+    Optional<VisualMedia> selectMovie(@NonNull List<Movie> movieList,
+                                      @NonNull MediaItemQueryTokens queryTokens);
 
     /**
      *
@@ -28,8 +28,8 @@ public interface TmdbMediaSelector {
      * @param queryTokens
      * @return
      */
-    Optional<MediaItem> selectTvSeries(@NonNull List<TvSeries> seriesList,
-                                        @NonNull MediaItemQueryTokens queryTokens);
+    Optional<VisualMedia> selectTvSeries(@NonNull List<TvSeries> seriesList,
+                                         @NonNull MediaItemQueryTokens queryTokens);
 
     /**
      *
@@ -38,7 +38,7 @@ public interface TmdbMediaSelector {
      * @param queryTokens
      * @return
      */
-    MediaItem selectClosestMatch(@NonNull MediaItem movieItem,
-                                 @NonNull MediaItem showItem,
-                                 @NonNull MediaItemQueryTokens queryTokens);
+    VisualMedia selectClosestMatch(@NonNull VisualMedia movieItem,
+                                   @NonNull VisualMedia showItem,
+                                   @NonNull MediaItemQueryTokens queryTokens);
 }

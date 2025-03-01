@@ -4,5 +4,5 @@ import lombok.Builder;
 
 @Builder
 public record TorrentAdded(String hashString,
-                           Integer id,
+                           Long id,
                            String name) {}

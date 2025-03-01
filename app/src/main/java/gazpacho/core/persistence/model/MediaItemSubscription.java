@@ -31,7 +31,9 @@ public class MediaItemSubscription extends Versioned {
     @FetchProfileOverride(
             profile = MediaItemSubscription_.PROFILE_WITH_ITEM_SUBSCRIBERS,
             mode = FetchMode.JOIN)
-    @JoinColumn(name = "tmdb_id")
+    @JoinColumns({
+            @JoinColumn(name = "tmdb_id"),
+            @JoinColumn(name = "media_type")})
     private MediaItem item;
 
     @ToString.Exclude

@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
-import gazpacho.core.model.MediaItem;
+import gazpacho.core.model.VisualMedia;
 import lombok.NonNull;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
@@ -66,9 +66,9 @@ public class MediaSearcher {
         this.logger = logger;
     }
 
-    public List<SearchResultEntry> searchItem(@NonNull MediaItem mediaItem,
+    public List<SearchResultEntry> searchItem(@NonNull VisualMedia visualMedia,
                                               @NonNull Connection connection) throws IOException, InterruptedException {
-        Set<String> searchPageUrls = getResultPageUrls(mediaItem, connection);
+        Set<String> searchPageUrls = getResultPageUrls(visualMedia, connection);
         logger.info("Search urls {}", searchPageUrls);
         return aggregateResults(connection, searchPageUrls);
     }
@@ -188,8 +188,8 @@ public class MediaSearcher {
         return searchEntryBuilder;
     }
 
-    private Set<String> getResultPageUrls(MediaItem mediaItem, Connection connection) throws IOException, InterruptedException {
-        String firstResultsUrl = queryUrlResolver.getQueryUrl(mediaItem);
+    private Set<String> getResultPageUrls(VisualMedia visualMedia, Connection connection) throws IOException, InterruptedException {
+        String firstResultsUrl = queryUrlResolver.getQueryUrl(visualMedia);
         Document firstResultsPage = getDocument(connection, firstResultsUrl);
         Element pager = firstResultsPage.selectFirst(PAGES_SELECTOR);
         Set<String> searchPagesUrls = new HashSet<>();

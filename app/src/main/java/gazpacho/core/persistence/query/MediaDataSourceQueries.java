@@ -13,6 +13,6 @@ public interface MediaDataSourceQueries {
 
     @HQL("select dataSource from MediaDataSource as dataSource " +
             "join fetch dataSource.request " +
-            "where dataSource.torrentId like :torrentId")
-    List<MediaDataSource> findDataSourceByTorrentId(String torrentId);
+            "where dataSource.torrentHash like :torrentHash")
+    List<MediaDataSource> findDataSourceByTorrentHash(String torrentHash);
 }

@@ -17,13 +17,13 @@ import gazpacho.core.datasource.filelist.navigate.QueryUrlResolver;
 import gazpacho.core.datasource.filelist.navigate.SessionHandler;
 import gazpacho.core.datasource.transmission.HttpTransmissionClient;
 import gazpacho.core.datasource.transmission.TransmissionClient;
+import gazpacho.core.datasource.transmission.model.io.Session;
 import gazpacho.core.datasource.transmission.model.io.TorrentAdded;
 import gazpacho.core.identify.DelimiterQueryTokensParser;
 import gazpacho.core.identify.MediaIdentifier;
 import gazpacho.core.identify.QueryTokensParser;
 import gazpacho.core.identify.Tmdb.*;
-import gazpacho.core.model.MediaItem;
-import gazpacho.core.model.MediaReleaseType;
+import gazpacho.core.model.*;
 import gazpacho.core.stream.plex.HttpPlexClient;
 import gazpacho.core.stream.plex.PlexClient;
 import gazpacho.core.stream.plex.match.PlexMediaMatcher;
@@ -80,38 +80,39 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
-        plexMediaServer();
+//        plexMediaServer();
+        testTransmissionHttpClient();
     }
 
-    public static Optional<Show> searchShow(PlexClient plexClient, MediaItem mediaItem) {
-        if (mediaItem.isMovie()) {
+    public static Optional<Show> searchShow(PlexClient plexClient, VisualMedia visualMedia) {
+        if (visualMedia.isMovie()) {
             return Optional.empty();
         }
 
         SearchResponse response = plexClient.search(
                 SHOW_SECTION_ID,
-                mediaItem.title(),
+                visualMedia.metadata().title(),
                 SearchScope.TV_SHOW
         );
 
         prettyJsonPrint(new ObjectMapper(), response);
 
         for (Metadata metadata : response.mediaContainer().metadata()) {
-            if (null != metadata.title() && metadata.title().equals(mediaItem.title())) {
+            if (null != metadata.title() && metadata.title().equals(visualMedia.metadata().title())) {
                 return Optional.of(Show.fromMetadata(metadata));
             }
         }
         return Optional.empty();
     }
 
-    public static Optional<Season> searchSeason(PlexClient plexClient, MediaItem mediaItem) {
-        Optional<Show> show = searchShow(plexClient, mediaItem);
+    public static Optional<Season> searchSeason(PlexClient plexClient, VisualMedia visualMedia) {
+        Optional<Show> show = searchShow(plexClient, visualMedia);
         if (show.isPresent()) {
             GetChildrenResponse response = plexClient.getChildren(show.get().ratingKey());
 
             for (Metadata metadata : response.mediaContainer().metadata()) {
                 if (metadata.type().equals(MediaReleaseType.TV_SEASON) &&
-                    metadata.index().equals(mediaItem.season())) {
+                    metadata.index().equals(visualMedia.release().season())) {
                     return Optional.of(Season.fromMetadata(metadata));
                 }
             }
@@ -120,14 +121,14 @@ public class App {
         return Optional.empty();
     }
 
-    public static Optional<Episode> searchEpisode(PlexClient plexClient, MediaItem mediaItem) {
-        Optional<Season> season = searchSeason(plexClient, mediaItem);
+    public static Optional<Episode> searchEpisode(PlexClient plexClient, VisualMedia visualMedia) {
+        Optional<Season> season = searchSeason(plexClient, visualMedia);
         if (season.isPresent()) {
             GetChildrenResponse response = plexClient.getChildren(season.get().ratingKey());
 
             for (Metadata metadata : response.mediaContainer().metadata()) {
                 if (metadata.type().equals(MediaReleaseType.TV_EPISODE) &&
-                    metadata.index().equals(mediaItem.episode())) {
+                    metadata.index().equals(visualMedia.release().episode())) {
                     return Optional.of(Episode.fromMetadata(metadata));
                 }
             }
@@ -136,21 +137,21 @@ public class App {
         return Optional.empty();
     }
 
-    public static Optional<Movie> searchMovie(PlexClient plexClient, MediaItem mediaItem) {
-        if (!mediaItem.isMovie()) {
+    public static Optional<Movie> searchMovie(PlexClient plexClient, VisualMedia visualMedia) {
+        if (!visualMedia.isMovie()) {
             return Optional.empty();
         }
 
         SearchResponse response = plexClient.search(
                 MOVIE_SECTION_ID,
-                mediaItem.title(),
+                visualMedia.metadata().title(),
                 SearchScope.MOVIE
         );
 
         prettyJsonPrint(new ObjectMapper(), response);
 
         for (Metadata metadata : response.mediaContainer().metadata()) {
-            if (null != metadata.title() && metadata.title().equals(mediaItem.title())) {
+            if (null != metadata.title() && metadata.title().equals(visualMedia.metadata().title())) {
                 return Optional.of(Movie.fromMetadata(metadata));
             }
         }
@@ -171,24 +172,37 @@ public class App {
                 X_PLEX_TOKEN
         );
 
-        MediaItem showItem = MediaItem.builder()
-                .title("Abbott Elementary")
-                .description("")
-                .language("EN")
-                .firstAirDate(LocalDate.parse("2021-12-07"))
-                .season(4)
-                .episode(2)
-                .mediaReleaseType(MediaReleaseType.TV_EPISODE)
-                .popularity(100.0)
+        VisualMedia showItem = VisualMedia.builder()
+                .metadata(MediaMetadata.builder()
+                        .tmdbId(11L)
+                        .mediaType(MediaType.TV)
+                        .title("Abbott Elementary")
+                        .description("")
+                        .language("EN")
+                        .firstAirDate(LocalDate.parse("2021-12-07"))
+                        .popularity(100.0)
+                        .build())
+                .release(MediaRelease.builder()
+                        .mediaReleaseType(MediaReleaseType.TV_EPISODE)
+                        .season(4)
+                        .episode(2)
+                        .build())
                 .build();
 
-        MediaItem movieItem = MediaItem.builder()
-                .title("The Lord of the Rings: The War of the Rohirrim")
-                .description("")
-                .language("EN")
-                .firstAirDate(LocalDate.parse("2024-12-01"))
-                .mediaReleaseType(MediaReleaseType.MOVIE)
-                .popularity(40.0)
+        VisualMedia movieItem = VisualMedia.builder()
+                .metadata(MediaMetadata.builder()
+                        .tmdbId(11L)
+                        .title("The Lord of the Rings: The War of the Rohirrim")
+                        .description("")
+                        .language("EN")
+                        .firstAirDate(LocalDate.parse("2024-12-01"))
+                        .mediaType(MediaType.MOVIE)
+                        .popularity(40.0)
+                        .build())
+                .release(MediaRelease.builder()
+                        .mediaReleaseType(MediaReleaseType.MOVIE)
+                        .build())
+
                 .build();
 
         PlexMediaMatcher mediaMatcher = new PlexMediaMatcher(plexClient);
@@ -223,7 +237,7 @@ public class App {
         MediaDataSourceRetriever mediaDataSourceRetriever = createMediaDataSourceRetriever();
         TransmissionClient transmissionClient = createTransmissionClient();
 
-        Optional<MediaItem> identifiedItem = mediaIdentifier.identify(searchQuery);
+        Optional<VisualMedia> identifiedItem = mediaIdentifier.identify(searchQuery);
         if (identifiedItem.isPresent()) {
             Path dataSourcePath = mediaDataSourceRetriever.retrieveDataSource(identifiedItem.get());
 
@@ -289,7 +303,7 @@ public class App {
                 "localhost");
     }
 
-    private static void testTransmissionHttpClient(String sessionId) {
+    private static void testTransmissionHttpClient() {
         ObjectMapper mapper =  new ObjectMapper().registerModule(new GuavaModule());
         BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         HttpHost targetHost = new HttpHost("http", "localhost", 9092);
@@ -309,6 +323,14 @@ public class App {
                     "localhost");
             var torrents = transmissionClient.listActive();
             LOGGER.info(torrents.toString());
+
+            transmissionClient.setSessionMetadata(Session.builder()
+                    .dhtEnabled(false)
+                    .pexEnabled(true)
+                    .build());
+
+            var session = transmissionClient.getSessionMetadata();
+            LOGGER.info(session.toString());
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -339,16 +361,22 @@ public class App {
                 downloader,
                 LOGGER);
 
-        MediaItem mediaItem = MediaItem.builder()
-                .title("")
-                .description("")
-                .firstAirDate(LocalDate.parse("2024-12-05"))
-                .mediaReleaseType(MediaReleaseType.MOVIE)
-                .language("EN")
-                .popularity(100.0)
+        VisualMedia visualMedia = VisualMedia.builder()
+                .metadata(MediaMetadata.builder()
+                        .tmdbId(12L)
+                        .title("")
+                        .description("")
+                        .firstAirDate(LocalDate.parse("2024-12-05"))
+                        .mediaType(MediaType.MOVIE)
+                        .language("EN")
+                        .popularity(100.0)
+                        .build())
+                .release(MediaRelease.builder()
+                        .mediaReleaseType(MediaReleaseType.MOVIE)
+                        .build())
                 .build();
 
-        Path downloadPath = dataSourceRetriever.retrieveDataSource(mediaItem);
+        Path downloadPath = dataSourceRetriever.retrieveDataSource(visualMedia);
 
         System.out.println("Download path: " + downloadPath);
     }

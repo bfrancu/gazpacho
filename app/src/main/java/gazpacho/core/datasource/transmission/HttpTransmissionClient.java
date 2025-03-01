@@ -33,17 +33,23 @@ public class HttpTransmissionClient implements TransmissionClient {
     private static final String TRANSMISSION_SESSION_ID_HEADER = "X-Transmission-Session-Id";
     private static final String CONTENT_TYPE_HEADER = "Content-type";
     private static final String APPLICATION_JSON = "application/json";
-    private static final String GET_METHOD = "torrent-get";
-    private static final String ADD_METHOD = "torrent-add";
-    private static final String DEL_METHOD = "torrent-remove";
+    private static final String TORRENT_GET_METHOD = "torrent-get";
+    private static final String TORRENT_ADD_METHOD = "torrent-add";
+    private static final String TORRENT_DEL_METHOD = "torrent-remove";
+    private static final String SESSION_GET_METHOD = "session-get";
+    private static final String SESSION_SET_METHOD = "session-set";
 
-    private static final List<String> GET_FIELD_NAMES = Arrays.asList(
+    private static final List<String> GET_TORRENT_FIELD_NAMES = Arrays.asList(
             Torrent.class.getDeclaredFields()).stream()
             .map(Field::getName)
             .collect(Collectors.toList());
 
-    private static final Arguments GET_REQUEST_ARGUMENTS = Arguments.builder()
-            .fields(GET_FIELD_NAMES)
+    private static final Arguments GET_TORRENT_REQUEST_ARGUMENTS = Arguments.builder()
+            .fields(GET_TORRENT_FIELD_NAMES)
+            .build();
+
+    private static final Arguments GET_SESSION_REQUEST_ARGUMENTS = Arguments.builder()
+            .fields(Session.FIELD_NAMES)
             .build();
 
     private Integer tag = 0;
@@ -56,11 +62,32 @@ public class HttpTransmissionClient implements TransmissionClient {
     private final String host;
 
     @Override
+    public Session getSessionMetadata() {
+        return sendRequest(GetRequest.builder()
+                        .method(SESSION_GET_METHOD)
+                        .tag(tag)
+                        .arguments(GET_SESSION_REQUEST_ARGUMENTS)
+                        .build(),
+                GetSessionResponse.class
+        );
+    }
+
+    @Override
+    public void setSessionMetadata(@NonNull Session sessionMetadata) {
+        sendRequest(SetSessionRequest.builder()
+                        .method(SESSION_SET_METHOD)
+                        .tag(tag)
+                        .arguments(sessionMetadata)
+                        .build(),
+                SetSessionResponse.class);
+    }
+
+    @Override
     public TorrentAdded download(@NonNull Path dataSourcePath, @NonNull Path downloadPath) {
         logger.info("Download data source {} to {}", dataSourcePath, downloadPath);
         AddResponse.Arguments addResponse = sendRequest(
                 AddRequest.builder()
-                        .method(ADD_METHOD)
+                        .method(TORRENT_ADD_METHOD)
                         .tag(tag)
                         .arguments(AddRequest.Arguments.builder()
                                 .downloadDir(downloadPath.toString())
@@ -85,7 +112,7 @@ public class HttpTransmissionClient implements TransmissionClient {
         logger.info("Remove {}", ids);
         sendRequest(
           RemoveRequest.builder()
-                  .method(DEL_METHOD)
+                  .method(TORRENT_DEL_METHOD)
                   .tag(tag)
                   .arguments(RemoveRequest.Arguments.builder()
                           .ids(ids)
@@ -99,13 +126,13 @@ public class HttpTransmissionClient implements TransmissionClient {
     @Override
     public ImmutableList<Torrent> listActive() {
         logger.info("List active");
-        GetResponse.Arguments getResponse = sendRequest(
+        GetTorrentResponse.Arguments getResponse = sendRequest(
                 GetRequest.builder()
-                        .method(GET_METHOD)
+                        .method(TORRENT_GET_METHOD)
                         .tag(tag)
-                        .arguments(GET_REQUEST_ARGUMENTS)
+                        .arguments(GET_TORRENT_REQUEST_ARGUMENTS)
                         .build(),
-                GetResponse.class
+                GetTorrentResponse.class
         );
 
         return getResponse.torrents();

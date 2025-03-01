@@ -79,8 +79,7 @@ public class DemoJdbc {
 
         MediaDataSource mediaDataSource = MediaDataSource.builder()
 //                .id(4123L)
-                .torrentLink("ldsadas")
-                .torrentId("1")
+                .torrentHash("1")
                 .downloadLocation("downloads/")
                 .request(request)
                 .finished(false)
@@ -105,7 +104,7 @@ public class DemoJdbc {
 
         sessionFactory.inTransaction(session -> {
             MediaDataSourceQueries queries = new MediaDataSourceQueries_(session);
-            List<MediaDataSource> dataSources = queries.findDataSourceByTorrentId("1");
+            List<MediaDataSource> dataSources = queries.findDataSourceByTorrentHash("1");
             if (null != dataSources && !dataSources.isEmpty()) {
                 dataSources.forEach(source -> {
                     LOGGER.info("Data source {}", source);

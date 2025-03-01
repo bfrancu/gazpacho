@@ -6,10 +6,7 @@ import gazpacho.core.datasource.filelist.model.*;
 import gazpacho.core.datasource.filelist.navigate.MediaSearcher;
 import gazpacho.core.datasource.filelist.navigate.SessionHandler;
 import gazpacho.core.exception.NonRetryableException;
-import gazpacho.core.model.MediaItem;
-import gazpacho.core.model.MediaReleaseType;
-import gazpacho.core.model.SizeUnit;
-import gazpacho.core.model.VideoQuality;
+import gazpacho.core.model.*;
 import org.jsoup.Connection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,13 +41,19 @@ class DataSourceRetrieverTest {
             .seeders(256)
             .build();
 
-    private static final MediaItem TEST_MEDIA_ITEM = MediaItem.builder()
-            .title("Test movie")
-            .description("")
-            .firstAirDate(LocalDate.parse("1999-01-01"))
-            .mediaReleaseType(MediaReleaseType.MOVIE)
-            .language("EN")
-            .popularity(200.0)
+    private static final VisualMedia TEST_MEDIA_ITEM = VisualMedia.builder()
+            .metadata(MediaMetadata.builder()
+                    .tmdbId(12L)
+                    .mediaType(MediaType.MOVIE)
+                    .title("Test movie")
+                    .description("")
+                    .firstAirDate(LocalDate.parse("1999-01-01"))
+                    .language("EN")
+                    .popularity(200.0)
+                    .build())
+            .release(MediaRelease.builder()
+                    .mediaReleaseType(MediaReleaseType.MOVIE)
+                    .build())
             .build();
 
     @Mock

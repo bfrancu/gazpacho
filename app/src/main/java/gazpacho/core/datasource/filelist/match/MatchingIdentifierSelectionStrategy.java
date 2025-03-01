@@ -1,7 +1,7 @@
 package gazpacho.core.datasource.filelist.match;
 
 import gazpacho.core.datasource.filelist.model.SearchResultEntry;
-import gazpacho.core.model.MediaItem;
+import gazpacho.core.model.VisualMedia;
 import gazpacho.core.model.MediaReleaseType;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +26,13 @@ public class MatchingIdentifierSelectionStrategy implements SearchResultSelectio
 
     @Override
     public Optional<SearchResultEntry> select(@NonNull List<SearchResultEntry> resultEntries,
-                                              @NonNull MediaItem mediaItem) {
-        logger.info("Selecting the best match for {} from {}", mediaItem, resultEntries);
+                                              @NonNull VisualMedia visualMedia) {
+        logger.info("Selecting the best match for {} from {}", visualMedia, resultEntries);
         if (resultEntries.isEmpty()) {
             return Optional.empty();
         }
 
-        List<SearchResultEntry> matched = filterByExactMatch(resultEntries, mediaItem);
+        List<SearchResultEntry> matched = filterByExactMatch(resultEntries, visualMedia);
         if (matched.isEmpty()) {
             return Optional.empty();
         }
@@ -44,29 +44,32 @@ public class MatchingIdentifierSelectionStrategy implements SearchResultSelectio
     }
 
     private List<SearchResultEntry> filterByExactMatch(List<SearchResultEntry> resultEntries,
-                                                       MediaItem mediaItem) {
-        String searchQueryValue = itemQueryConverter.getSearchResultTitle(mediaItem);
+                                                       VisualMedia visualMedia) {
+        String searchQueryValue = itemQueryConverter.getSearchResultTitle(visualMedia);
         logger.info("Matching by title prefix {}", searchQueryValue);
         List<SearchResultEntry> matched = resultEntries.stream()
                 .filter(result -> result.title()
                         .toLowerCase(Locale.ROOT)
                         .startsWith(searchQueryValue.toLowerCase(Locale.ROOT)))
-                .filter(result -> genreMatches(result, mediaItem))
+                .filter(result -> genreMatches(result, visualMedia))
                 .collect(Collectors.toList());
 
-        if (matched.isEmpty() && mediaItem.isEpisode()) {
-            MediaItem seasonMediaItem = mediaItem.toBuilder()
-                    .mediaReleaseType(MediaReleaseType.TV_SEASON)
+        if (matched.isEmpty() && visualMedia.isEpisode()) {
+            VisualMedia seasonVisualMedia = visualMedia.toBuilder()
+                    .release(visualMedia.release()
+                            .toBuilder()
+                            .mediaReleaseType(MediaReleaseType.TV_SEASON)
+                            .build())
                     .build();
-            return filterByExactMatch(resultEntries, seasonMediaItem);
+            return filterByExactMatch(resultEntries, seasonVisualMedia);
         }
 
         return matched;
     }
 
-    private boolean genreMatches(SearchResultEntry resultEntry, MediaItem mediaItem) {
-        logger.info("Genre matches {} : {}", resultEntry, mediaItem);
-        return switch (mediaItem.mediaReleaseType()) {
+    private boolean genreMatches(SearchResultEntry resultEntry, VisualMedia visualMedia) {
+        logger.info("Genre matches {} : {}", resultEntry, visualMedia);
+        return switch (visualMedia.release().mediaReleaseType()) {
             case MediaReleaseType.MOVIE -> resultEntry.category().category().isMovie();
             case MediaReleaseType.TV_EPISODE,
                  MediaReleaseType.TV_SEASON -> resultEntry.category().category().isTv();

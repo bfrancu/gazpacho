@@ -19,19 +19,12 @@ import lombok.ToString;
 @Entity
 @Table(name="\"MediaItems\"")
 public class MediaItem extends Versioned {
-    @Id
-    @NonNull
-    @Column(name = "tmdb_id")
-    private Long tmdbId;
+    @EmbeddedId
+    private MediaItemId mediaItemId;
 
-    public MediaItem(Long tmdbId) {
-        this.tmdbId = tmdbId;
+    public MediaItem(MediaItemId id) {
+        this.mediaItemId = id;
     }
-
-    @Enumerated(EnumType.STRING)
-    @Basic(optional = false)
-    @Column(name = "media_type")
-    private MediaType mediaType;
 
     @ToString.Exclude
     @OneToOne(mappedBy = MediaItemSubscription_.ITEM,

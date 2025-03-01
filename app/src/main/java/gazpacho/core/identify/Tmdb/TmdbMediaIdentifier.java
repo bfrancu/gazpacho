@@ -3,7 +3,7 @@ package gazpacho.core.identify.Tmdb;
 import gazpacho.core.identify.MediaIdentifier;
 import gazpacho.core.identify.MediaItemQueryTokens;
 import gazpacho.core.identify.QueryTokensParser;
-import gazpacho.core.model.MediaItem;
+import gazpacho.core.model.VisualMedia;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +16,7 @@ public class TmdbMediaIdentifier implements MediaIdentifier {
     @NonNull private final QueryTokensParser queryTokensParser;
 
     @Override
-    public Optional<MediaItem> identify(@NonNull String identifier) {
+    public Optional<VisualMedia> identify(@NonNull String identifier) {
         return queryTokensParser.parse(identifier)
                 .map(queryTokens -> {
                     var matchedShow = identifyShow(queryTokens);
@@ -36,11 +36,11 @@ public class TmdbMediaIdentifier implements MediaIdentifier {
                 });
     }
 
-    private MediaItem identifyShow(MediaItemQueryTokens queryTokens) {
+    private VisualMedia identifyShow(MediaItemQueryTokens queryTokens) {
         return mediaSelector.selectTvSeries(searcher.searchTvSeries(queryTokens), queryTokens).orElse(null);
     }
 
-    private MediaItem identifyMovie(MediaItemQueryTokens queryTokens) {
+    private VisualMedia identifyMovie(MediaItemQueryTokens queryTokens) {
         return mediaSelector.selectMovie(searcher.searchMovies(queryTokens), queryTokens).orElse(null);
     }
 }

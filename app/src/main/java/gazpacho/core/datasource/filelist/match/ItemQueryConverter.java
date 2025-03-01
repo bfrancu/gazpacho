@@ -1,6 +1,6 @@
 package gazpacho.core.datasource.filelist.match;
 
-import gazpacho.core.model.MediaItem;
+import gazpacho.core.model.VisualMedia;
 import lombok.NonNull;
 import org.apache.commons.lang3.StringUtils;
 
@@ -11,43 +11,43 @@ public class ItemQueryConverter {
     private static final String SEASON_PREFIX = "S";
     private static final String AND_CHAR_REPLACEMENT = "and";
 
-    public String getQuerySearchValue(@NonNull MediaItem mediaItem) {
-        return getTextRepresentation(mediaItem, QUERY_SEARCH_VALUE_DELIM);
+    public String getQuerySearchValue(@NonNull VisualMedia visualMedia) {
+        return getTextRepresentation(visualMedia, QUERY_SEARCH_VALUE_DELIM);
     }
 
-    public String getSearchResultTitle(@NonNull MediaItem mediaItem) {
-        return getTextRepresentation(mediaItem, SEARCH_RESULT_TITLE_DELIM);
+    public String getSearchResultTitle(@NonNull VisualMedia visualMedia) {
+        return getTextRepresentation(visualMedia, SEARCH_RESULT_TITLE_DELIM);
     }
 
-    private String getTextRepresentation(MediaItem mediaItem, String delim) {
-        return (switch(mediaItem.mediaReleaseType()) {
-            case MOVIE -> getMovieQuery(mediaItem, delim);
-            case TV_SEASON -> getTvSeasonQuery(mediaItem, delim);
-            case TV_EPISODE -> getTvEpisodeQuery(mediaItem, delim);
+    private String getTextRepresentation(VisualMedia visualMedia, String delim) {
+        return (switch(visualMedia.release().mediaReleaseType()) {
+            case MOVIE -> getMovieQuery(visualMedia, delim);
+            case TV_SEASON -> getTvSeasonQuery(visualMedia, delim);
+            case TV_EPISODE -> getTvEpisodeQuery(visualMedia, delim);
             case TV_SHOW,
                  UNKNOWN -> throw new IllegalArgumentException(
-                         String.format("Invalid media item %s type %s", mediaItem, mediaItem.mediaReleaseType()));
+                         String.format("Invalid media item %s type %s", visualMedia, visualMedia.release().mediaReleaseType()));
         });
     }
 
 
-    private String getMovieQuery(MediaItem mediaItem, String delim) {
-        StringBuilder builder = new StringBuilder(replaceSeparators(mediaItem.title(), delim));
+    private String getMovieQuery(VisualMedia visualMedia, String delim) {
+        StringBuilder builder = new StringBuilder(replaceSeparators(visualMedia.metadata().title(), delim));
         builder.append(delim)
-                .append(mediaItem.firstAirDate().getYear());
+                .append(visualMedia.metadata().firstAirDate().getYear());
         return builder.toString();
     }
 
-    private String getTvSeasonQuery(MediaItem mediaItem, String delim) {
-        StringBuilder builder = new StringBuilder(replaceSeparators(mediaItem.title(), delim));
+    private String getTvSeasonQuery(VisualMedia visualMedia, String delim) {
+        StringBuilder builder = new StringBuilder(replaceSeparators(visualMedia.metadata().title(), delim));
         builder.append(delim)
-                .append(getSeasonSearchComponent(mediaItem));
+                .append(getSeasonSearchComponent(visualMedia));
         return builder.toString();
     }
 
-    private String getTvEpisodeQuery(MediaItem mediaItem, String delim) {
-        StringBuilder builder = new StringBuilder(replaceSeparators(mediaItem.title(), delim));
-        builder.append(getEpisodeSearchComponent(mediaItem, delim));
+    private String getTvEpisodeQuery(VisualMedia visualMedia, String delim) {
+        StringBuilder builder = new StringBuilder(replaceSeparators(visualMedia.metadata().title(), delim));
+        builder.append(getEpisodeSearchComponent(visualMedia, delim));
         return builder.toString();
     }
 
@@ -60,14 +60,14 @@ public class ItemQueryConverter {
         return title.replace("&", AND_CHAR_REPLACEMENT);
     }
 
-    private String getSeasonSearchComponent(MediaItem mediaItem) {
-        return getShowDisplayForm(SEASON_PREFIX, mediaItem.season());
+    private String getSeasonSearchComponent(VisualMedia visualMedia) {
+        return getShowDisplayForm(SEASON_PREFIX, visualMedia.release().season());
     }
 
-    private String getEpisodeSearchComponent(MediaItem mediaItem, String delim) {
-        StringBuilder builder = new StringBuilder(getSeasonSearchComponent(mediaItem));
+    private String getEpisodeSearchComponent(VisualMedia visualMedia, String delim) {
+        StringBuilder builder = new StringBuilder(getSeasonSearchComponent(visualMedia));
         builder.append(delim);
-        builder.append(getShowDisplayForm(EPISODE_PREFIX, mediaItem.episode()));
+        builder.append(getShowDisplayForm(EPISODE_PREFIX, visualMedia.release().episode()));
         return builder.toString();
     }
 
