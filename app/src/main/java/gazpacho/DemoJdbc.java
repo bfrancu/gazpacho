@@ -54,6 +54,7 @@ public class DemoJdbc {
                 .addAnnotatedClass(Profile.class)
                 .addAnnotatedClass(MediaItemSubscription.class)
                 .addAnnotatedClass(Request.class)
+                .addAnnotatedClass(Release.class)
                 .addAnnotatedClass(Wish.class);
     }
 
@@ -63,7 +64,7 @@ public class DemoJdbc {
 
         String numb1 = "03212364";
         Profile profile = Profile.builder()
-                .phoneNumber(numb1)
+                .userId(numb1)
                 .firstName("Billy")
                 .lastName("Bob")
                 .build();
@@ -97,7 +98,7 @@ public class DemoJdbc {
 
 
         ProfileTable profileTable = new ProfileTable(sessionFactory);
-        profileTable.getProfileByPhoneNumber(profile.getPhoneNumber()).ifPresent(p -> {
+        profileTable.getProfileByPhoneNumber(profile.getUserId()).ifPresent(p -> {
             LOGGER.info("Profile {}", p);
             p.getRequests().forEach(r -> LOGGER.info("Request {}", r));
         });
@@ -122,14 +123,14 @@ public class DemoJdbc {
 
         String numb1 = "07541425";
         Profile profile = Profile.builder()
-                .phoneNumber(numb1)
+                .userId(numb1)
                 .firstName("Gelu")
                 .lastName("Glad")
                 .build();
 
         String numb2 = "07541426";
         Profile profile2 = Profile.builder()
-                .phoneNumber(numb2)
+                .userId(numb2)
                 .firstName("Menumorut")
                 .build();
 
@@ -137,7 +138,7 @@ public class DemoJdbc {
         profileTable.persist(profile);
         profileTable.persist(profile2);
 
-        profileTable.getProfileByPhoneNumber(profile.getPhoneNumber()).ifPresent(p -> {
+        profileTable.getProfileByPhoneNumber(profile.getUserId()).ifPresent(p -> {
             LOGGER.info("Object found {}", p);
         });
 

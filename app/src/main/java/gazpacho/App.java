@@ -20,9 +20,11 @@ import gazpacho.core.datasource.transmission.TransmissionClient;
 import gazpacho.core.datasource.transmission.model.io.Session;
 import gazpacho.core.datasource.transmission.model.io.TorrentAdded;
 import gazpacho.core.identify.DelimiterQueryTokensParser;
+import gazpacho.core.identify.ExternalTitleParser;
 import gazpacho.core.identify.MediaIdentifier;
 import gazpacho.core.identify.QueryTokensParser;
-import gazpacho.core.identify.Tmdb.*;
+import gazpacho.core.identify.imdb.ImdbUrlParser;
+import gazpacho.core.identify.tmdb.*;
 import gazpacho.core.model.*;
 import gazpacho.core.stream.plex.HttpPlexClient;
 import gazpacho.core.stream.plex.PlexClient;
@@ -43,6 +45,7 @@ import info.movito.themoviedbapi.model.core.*;
 import info.movito.themoviedbapi.model.core.multi.MultiResultsPage;
 import info.movito.themoviedbapi.model.tv.series.TvSeriesDb;
 import info.movito.themoviedbapi.tools.TmdbException;
+import info.movito.themoviedbapi.tools.model.time.ExternalSource;
 import info.movito.themoviedbapi.tools.model.time.TimeWindow;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.similarity.LevenshteinDistance;
@@ -80,8 +83,34 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         BasicConfigurator.configure();
+        testMediaSourceDownload();
+//        testExternalIdentification();
 //        plexMediaServer();
-        testTransmissionHttpClient();
+//        testTransmissionHttpClient();
+    }
+
+    private static void testExternalIdentification() {
+        TmdbApi tmdbApi = new TmdbApi(API_READ_ACCESS_TOKEN_KEY);
+        TmdbMediaSelector mediaSelector = new MostPopularMediaSelector(tmdbApi, LOGGER);
+        ExternalTitleParser parser = new ImdbUrlParser();
+        ExternalIdMediaIdentifier identifier = new ExternalIdMediaIdentifier(
+                tmdbApi, parser, mediaSelector, ExternalSource.IMDB_ID, LOGGER);
+
+        identifier.identify("tt11280740").ifPresent(visualMedia -> LOGGER.info(String.valueOf(visualMedia)));
+        identifier.identify("https://www.imdb.com/title/tt0078788/").ifPresent(visualMedia -> LOGGER.info(String.valueOf(visualMedia)));
+        identifier.identify("https://www.imdb.com/title/tt10548174").ifPresent(visualMedia -> LOGGER.info(String.valueOf(visualMedia)));
+        identifier.identify("https://www.imdb.com/title/tt0078788/?ref_=nv_sr_srsg_0_tt_7_nm_1_in_0_q_apo")
+                .ifPresent(visualMedia -> LOGGER.info(String.valueOf(visualMedia)));
+        identifier.identify("https://www.imdb.com/title/tt3581920/episodes/?season=2&ref_=ttep")
+                .ifPresent(visualMedia -> LOGGER.info(String.valueOf(visualMedia)));
+        identifier.identify("https://www.imdb.com/title/tt9288030/episodes/?season=3")
+                .ifPresent(visualMedia -> LOGGER.info(String.valueOf(visualMedia)));
+        identifier.identify("https://www.imdb.com/title/tt11280740/episodes/?ref_=tt_eps")
+                .ifPresent(visualMedia -> LOGGER.info(String.valueOf(visualMedia)));
+        identifier.identify("https://www.imdb.com/title/tt31938062/episodes/")
+                .ifPresent(visualMedia -> LOGGER.info(String.valueOf(visualMedia)));
+        identifier.identify("https://www.imdb.com/title/tt13406094/episodes")
+                .ifPresent(visualMedia -> LOGGER.info(String.valueOf(visualMedia)));
     }
 
     public static Optional<Show> searchShow(PlexClient plexClient, VisualMedia visualMedia) {
@@ -339,7 +368,7 @@ public class App {
 
     private static void testMediaSourceDownload() {
         DataSourceDownloader downloader = new DataSourceDownloader(Path.of("/home/bfrancu/Downloads"), LOGGER);
-        SessionHandler sessionHandler = new SessionHandler("flashback", "******", 300, 40);
+        SessionHandler sessionHandler = new SessionHandler("flashback", "b54nfo", 300, 40);
         ItemQueryConverter itemQueryConverter = new ItemQueryConverter();
         QueryUrlResolver queryUrlResolver = new QueryUrlResolver(itemQueryConverter);
         MediaSearcher mediaSearcher = new MediaSearcher(queryUrlResolver, LOGGER);

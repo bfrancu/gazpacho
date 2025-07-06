@@ -40,7 +40,7 @@ public class Wish extends Versioned {
     private MediaItemSubscription subscription;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "phone_number")
+    @JoinColumn(name = "user_id")
     @FetchProfileOverride(
             profile = Wish_.PROFILE_WITH_SUBSCRIPTION_PROFILE,
             mode = FetchMode.JOIN)

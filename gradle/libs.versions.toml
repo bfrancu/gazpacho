@@ -22,12 +22,13 @@ plexApiVer = "0.11.1"
 pgJDBCVer = "42.7.5"
 glassfishJakartaVer = "6.0.1"
 agroalPoolVer = "2.5"
-hibernateValidatorVer = "8.0.2.Final"
 hibernateOrmVer = "7.0.0.Beta3"
 hibernateAgroalVer = "7.0.0.Beta3"
 hibernateProcessorVer = "7.0.0.Beta3"
-hibernateQueryValidatorVer = "2.0-SNAPSHOT"
 h2DatabaseVer = "2.3.232"
+seleniumVer = "4.29.0"
+seleniumFirefoxWebdriverVer = "4.29.0"
+telegramBotsVer = "6.0.1"
 
 
 [libraries]
@@ -52,11 +53,12 @@ mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockitoCoreV
 junitJupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiterEngineVer" }
 plexApi = { module = "dev.plexapi:plexapi", version.ref = "plexApiVer" }
 pgJDBC = { module = "org.postgresql:postgresql", version.ref = "pgJDBCVer" }
-hibernateOrm = { module = "org.hibernate.orm:hibernate-core", version.ref = "hibernateOrmVer" }
-hibernateValidator = { module = "org.hibernate.validator:hibernate-validator", version.ref = "hibernateValidatorVer" }
 glassfishJakartaExpressionLanguage = { module = "jakarta.el:jakarta.el-api", version.ref = "glassfishJakartaVer" }
+hibernateOrm = { module = "org.hibernate.orm:hibernate-core", version.ref = "hibernateOrmVer" }
 hibernateAgroal = { module = "org.hibernate.orm:hibernate-agroal", version.ref = "hibernateAgroalVer" }
-agroalPool = { module = "io.agroal:agroal-pool", version.ref = "agroalPoolVer" }
 hibernateProcessor = { module = "org.hibernate.orm:hibernate-processor", version.ref = "hibernateProcessorVer" }
-hibernateQueryValidator = { module = "org.hibernate:query-validator", version.ref = "hibernateQueryValidatorVer" }
+agroalPool = { module = "io.agroal:agroal-pool", version.ref = "agroalPoolVer" }
 h2Database = { module = "com.h2database:h2", version.ref = "h2DatabaseVer" }
+seleniumJava = { module = "org.seleniumhq.selenium:selenium-java", version.ref = "seleniumVer"}
+seleniumFirefoxWebdriver = { module = "org.seleniumhq.selenium:selenium-firefox-driver", version.ref = "seleniumFirefoxWebdriverVer"}
+telegramBots = { module = "org.telegram:telegrambots", version.ref = "telegramBotsVer" }

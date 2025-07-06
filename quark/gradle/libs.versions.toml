@@ -1,0 +1,60 @@
+[versions]
+guavaVer = "33.3.0-jre"
+lombokVer = "1.18.34"
+jsonVer = "20231013"
+jsoupVer = "1.18.3"
+slfLog4jVer = "2.0.16"
+log4jApiVer = "2.24.3"
+log4jCoreVer = "2.24.3"
+quarkusHibernateOrmVer = "3.21.3"
+jacksonGuavaVer = "2.18.2"
+springDataJpaVer = "3.4.3"
+apacheHttpClientVer = "5.4.1"
+apacheHttpCoreVer = "5.3.1"
+apacheCommonsLangVer = "3.17.0"
+apacheCommonsTextVer = "1.12.0"
+apacheCommonsValidatorVer = "1.9.0"
+apacheCommonsCollectionsVer = "4.5.0-M3"
+junitVer = "5.14.0"
+mockitoCoreVer = "5.14.0"
+junitJupiterEngineVer = "5.11.1"
+plexApiVer = "0.11.1"
+telegramBotsVer = "6.0.1"
+theMovieDbApiVer = "2.1.2"
+quarkusJdbcH2ver = "3.23.2"
+agroalPoolVer = "2.5"
+
+[libraries]
+slf4jlog4j12 = { module = "org.slf4j:slf4j-reload4j", version.ref = "slfLog4jVer" }
+log4jApi = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4jApiVer" }
+log4jCore = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4jCoreVer" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoupVer" }
+guava = { module = "com.google.guava:guava", version.ref = "guavaVer" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombokVer" }
+json = { module = "org.json:json", version.ref = "jsonVer" }
+jacksonGuava = { module = "com.fasterxml.jackson.datatype:jackson-datatype-guava", version.ref = "jacksonGuavaVer" }
+quarkusRest = { module = "io.quarkus:quarkus-rest" }
+quarkusHibernateOrm = { module = "io.quarkus:quarkus-hibernate-orm" }
+quarkusAgroal = { module = "io.quarkus:quarkus-agroal" }
+quarkusFlyway = { module = "io.quarkus:quarkus-flyway" }
+quarkusRestJsonB = { module = "io.quarkus:quarkus-rest-jsonb" }
+quarkusHibernateValidator = { module = "io.quarkus:quarkus-hibernate-validator" }
+quarkusSmallRyeOpenApi = { module = "io.quarkus:quarkus-smallrye-openapi" }
+quarkusSpringDataJpa = { module = "io.quarkus:quarkus-spring-data-jpa" }
+quarkusJdbcPostgresql = { module = "io.quarkus:quarkus-jdbc-postgresql" }
+quarkusJdbcH2 = { module = "io.quarkus:quarkus-jdbc-h2", version.ref = "quarkusJdbcH2ver" }
+quarkusArc = { module = "io.quarkus:quarkus-arc" }
+springDataJpa = { module = "org.springframework.data:spring-data-jpa", version.ref = "springDataJpaVer" }
+apacheHttpClient = { module = "org.apache.httpcomponents.client5:httpclient5", version.ref = "apacheHttpClientVer" }
+apacheHttpCore = { module = "org.apache.httpcomponents.core5:httpcore5", version.ref = "apacheHttpCoreVer" }
+apacheCommonsLang = { module = "org.apache.commons:commons-lang3", version.ref = "apacheCommonsLangVer" }
+apacheCommonsText = { module = "org.apache.commons:commons-text", version.ref = "apacheCommonsTextVer" }
+apacheCommonsValidator = { module = "commons-validator:commons-validator", version.ref = "apacheCommonsValidatorVer" }
+apacheCommonsCollections = { module = "org.apache.commons:commons-collections4", version.ref = "apacheCommonsCollectionsVer" }
+junit = { module = "org.mockito:mockito-junit-jupiter", version.ref = "junitVer" }
+mockitoCore = { module = "org.mockito:mockito-core", version.ref = "mockitoCoreVer" }
+junitJupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiterEngineVer" }
+plexApi = { module = "dev.plexapi:plexapi", version.ref = "plexApiVer" }
+telegramBots = { module = "org.telegram:telegrambots", version.ref = "telegramBotsVer" }
+theMovieDbApi = { module = "uk.co.conoregan:themoviedbapi", version.ref = "theMovieDbApiVer" }
+agroalPool = { module = "io.agroal:agroal-pool", version.ref = "agroalPoolVer" }

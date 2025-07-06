@@ -1,0 +1,14 @@
+package gazpacho.core.model;
+
+public enum RequestStatus {
+    PENDING,
+    MEDIA_MATCHED,
+    MEDIA_NOT_FOUND,
+    DATA_SOURCE_LINKED,
+    DATA_SOURCE_NOT_FOUND,
+    PENDING_USER_CONFIRMATION,
+    USER_CONFIRMED,
+    QUEUED_FOR_DOWNLOAD,
+    COMPLETED,
+    CANCELLED
+}

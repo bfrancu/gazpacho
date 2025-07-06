@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.*;
+import jakarta.persistence.Table;
 
 import java.util.Set;
 
@@ -24,11 +25,11 @@ import java.util.Set;
 public class Profile extends Versioned {
     @Id
     @NonNull
-    @Column(unique = true, name = "phone_number")
-    private String phoneNumber;
+    @Column(unique = true, name = "user_id")
+    private String userId;
 
-    public Profile(@NonNull String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public Profile(@NonNull String userId) {
+        this.userId = userId;
     }
 
     @ToString.Exclude

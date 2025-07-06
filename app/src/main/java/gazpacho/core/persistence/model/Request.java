@@ -38,7 +38,7 @@ public class Request extends Versioned {
 
     @ToString.Exclude
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "phone_number")
+    @JoinColumn(name = "user_id")
     private Profile originator;
 
     @OneToOne(fetch = FetchType.LAZY,
@@ -53,6 +53,11 @@ public class Request extends Versioned {
             @JoinColumn(name = "tmdb_id"),
             @JoinColumn(name = "media_type")})
     private MediaItem item;
+
+    @ToString.Exclude
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "release_id")
+    private Release release;
 
     @Enumerated(EnumType.STRING)
     @Basic(optional = false)

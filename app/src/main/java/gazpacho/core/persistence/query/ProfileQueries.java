@@ -20,9 +20,9 @@ public interface ProfileQueries {
             "join fetch profile.wishlist " +
             "where profile.phoneNumber like :phoneNumber")
     */
-    @HQL("where phoneNumber like :phoneNumber")
-    List<Profile> findProfileByPhoneNumber(String phoneNumber, Page page);
+    @HQL("where userId like :userId")
+    List<Profile> findProfileByUserId(String userId, Page page);
 
     @Find
-    Profile getProfile(String phoneNumber);
+    Profile getProfile(String userId);
 }

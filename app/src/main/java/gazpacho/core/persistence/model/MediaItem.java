@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.Set;
 import lombok.Data;
-import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -36,10 +35,22 @@ public class MediaItem extends Versioned {
     @OneToMany(mappedBy = Request_.ITEM)
     private Set<Request> requests;
 
-    @Basic(optional=false)
+    @ToString.Exclude
+    @OneToMany(mappedBy = Release_.ITEM,
+            fetch = FetchType.LAZY)
+    private Set<Release> releases;
+
+    @ToString.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn(
+            name = "next_release",
+            referencedColumnName = "release_id")
+    private Release nextRelease;
+
+    @Basic(optional = false)
     private String title;
 
-    @Basic(optional=false)
+    @Basic(optional = false)
     private String description;
 
     @Column(name = "season_count")

@@ -104,7 +104,7 @@ class ProfileTableTest {
 
     private Profile buildProfile(String phoneNumber) {
         return Profile.builder()
-                .phoneNumber(phoneNumber)
+                .userId(phoneNumber)
                 .firstName("John")
                 .lastName("Doe")
                 .build();

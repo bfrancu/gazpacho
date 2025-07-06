@@ -1,6 +1,10 @@
 package gazpacho.core.model;
 
+import gazpacho.core.persistence.model.MediaItem;
+import gazpacho.core.persistence.model.MediaItemId;
 import info.movito.themoviedbapi.model.movies.MovieDb;
+import info.movito.themoviedbapi.model.core.Movie;
+import info.movito.themoviedbapi.model.core.TvSeries;
 import info.movito.themoviedbapi.model.tv.core.TvEpisode;
 import info.movito.themoviedbapi.model.tv.series.TvSeriesDb;
 import lombok.Builder;
@@ -77,7 +81,32 @@ public record VisualMedia(
                 .build();
     }
 
+    public MediaItem toPersistenceModel() {
+       return MediaItem.builder()
+               .mediaItemId(MediaItemId.builder()
+                       .mediaType(metadata.mediaType())
+                       .tmdbId(metadata.tmdbId())
+                       .build())
+               .build();
+    }
+
     private static MediaMetadata getMetadata(TvSeriesDb show) {
+        var builder = MediaMetadata.builder()
+                .tmdbId((long) show.getId())
+                .title(show.getName())
+                .description(show.getOverview())
+                .language(show.getOriginalLanguage())
+                .firstAirDate(LocalDate.parse(show.getFirstAirDate()))
+                .mediaType(MediaType.TV)
+                .popularity(show.getPopularity());
+
+        if (null != show.getOriginCountry() && !show.getOriginCountry().isEmpty()) {
+            builder = builder.originCountry(show.getOriginCountry().getFirst());
+        }
+        return builder.build();
+    }
+
+    private static MediaMetadata getMetadata(TvSeries show) {
         var builder = MediaMetadata.builder()
                 .tmdbId((long) show.getId())
                 .title(show.getName())

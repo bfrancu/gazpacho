@@ -1,5 +1,6 @@
 package gazpacho.core.identify;
 
+import gazpacho.core.util.MatcherUtils;
 import lombok.NonNull;
 
 import java.util.Optional;
@@ -72,30 +73,19 @@ public class DelimiterQueryTokensParser implements QueryTokensParser {
         return Optional.empty();
     }
 
-    private static Optional<String> getMatchedGroupString(Matcher matcher, int index) {
-        if (matcher.groupCount() > index && null != matcher.group(index)) {
-            return Optional.of(matcher.group(index).strip());
-        }
-        return Optional.empty();
-    }
-
-    private static Optional<Integer> getMatchedGroupInteger(Matcher matcher, int index) {
-        return getMatchedGroupString(matcher, index).map(Integer::parseInt);
-    }
-
     private static Optional<String> getMatchedName(Matcher matcher) {
-        return getMatchedGroupString(matcher, NAME_GROUP_IDX);
+        return MatcherUtils.getMatchedGroupString(matcher, NAME_GROUP_IDX);
     }
 
     private static Optional<Integer> getMatchedYear(Matcher matcher) {
-        return getMatchedGroupInteger(matcher, YEAR_GROUP_IDX);
+        return MatcherUtils.getMatchedGroupInteger(matcher, YEAR_GROUP_IDX);
     }
 
     private static Optional<Integer> getMatchedSeason(Matcher matcher) {
-        return getMatchedGroupInteger(matcher, SEASON_GROUP_IDX);
+        return MatcherUtils.getMatchedGroupInteger(matcher, SEASON_GROUP_IDX);
     }
 
     private static Optional<Integer> getMatchedEpisode(Matcher matcher) {
-        return getMatchedGroupInteger(matcher, EPISODE_GROUP_IDX);
+        return MatcherUtils.getMatchedGroupInteger(matcher, EPISODE_GROUP_IDX);
     }
 }

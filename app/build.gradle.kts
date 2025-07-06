@@ -9,6 +9,7 @@ plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
     id("io.freefair.lombok") version "8.6"
+//    id("io.quarkus")
 }
 
 repositories {
@@ -47,20 +48,33 @@ dependencies {
     implementation(libs.apacheHttpClient)
     implementation(libs.apacheHttpCore)
     implementation(libs.plexApi)
+
+    implementation(libs.seleniumJava)
+    implementation(libs.seleniumFirefoxWebdriver)
+
     implementation(libs.pgJDBC)
-
     implementation(libs.hibernateOrm)
-
     //implementation(libs.hibernateValidator)
     implementation(libs.glassfishJakartaExpressionLanguage)
-
     implementation(libs.hibernateAgroal)
     implementation(libs.agroalPool)
+    implementation(libs.telegramBots)
+
+//    implementation(libs.quarkusContainerImageDocker)
+//    implementation(libs.quarkusRest)
+//    implementation(libs.quarkusRestJackson)
+//    implementation(libs.quarkusArc)
+//    implementation(libs.quarkusJunit)
+//    implementation(libs.restAssured)
+//    implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
 
     annotationProcessor(libs.hibernateProcessor)
 
     // This dependency is used by the application.
 }
+
+//group = "org.gazpacho"
+//version = "1.0.0-SNAPSHOT"
 
 // Apply a specific Java toolchain to ease working on different environments.
 java {
@@ -73,3 +87,11 @@ application {
     // Define the main class for the application.
     mainClass.set("gazpacho.App")
 }
+
+/*
+sourceSets {
+    main {
+        java.srcDirs("build/generated/sources/annotationProcessor/java/main")
+    }
+}
+*/
